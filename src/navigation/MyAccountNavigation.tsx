@@ -15,6 +15,7 @@ const Stack = createNativeStackNavigator();
 
 const MyAccountNavigation = () => {
     return(
+      
             <Stack.Navigator screenOptions={{
             headerShown:false
         }} initialRouteName="Account">

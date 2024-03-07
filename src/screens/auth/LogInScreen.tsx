@@ -23,6 +23,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import {auth, db} from '../../services/firebaseConfig';
 import {doc, getDoc, loadBundle} from 'firebase/firestore';
+import {useAuth} from '../../services/useContextService';
+import AsyncStorageService from '../../services/asyncStorageService';
 
 const LogInScreen = ({navigation}: any) => {
   const onPressSkip = () => {
@@ -74,51 +76,41 @@ const LogInScreen = ({navigation}: any) => {
       .then(async userCred => {
         // console.log(userCred);
 
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{name: 'AppStack'}],
-          }),
+        await AsyncStorage.setItem('token', userCred.user.uid).then(token =>
+        { console.log("tokenInLogIn" , token)
+         
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'AppStack'}],
+            }),
+          )}
         );
-        getDoc(doc(db, 'user', userCred?.user.uid)) // getDoc to get document data from doc record having db storage named user having particular id
-          .then(async docSnap => {
-            // gives all stored data from database
-            if (docSnap.exists()) {
-              console.log('User Data:', docSnap.data());
-              await AsyncStorage.setItem(
-                'UserData',
-                JSON.stringify(docSnap.data()),
-              );
-            }
-          });
-        await AsyncStorage.setItem('token', userCred.user.uid);
       })
       .catch(err => {
         console.log(err.code);
-        
-        if (
-          err.code === 'auth/invalid-credential'
-        ) {
+
+        if (err.code === 'auth/invalid-credential') {
           setError('User not registered!');
         }
       });
   };
 
   return (
-    <View className='flex-1'>
+    <View className="flex-1">
       <Layout>
-        <View className='flex-1 justify-center'>
-          <View className='flex-row justify-between' >
-            <Text className='text-3xl font-bold text-primary'>LOGIN</Text>
+        <View className="flex-1 justify-center">
+          <View className="flex-row justify-between">
+            <Text className="text-3xl font-bold text-primary">LOGIN</Text>
             <SecondaryButton
               text="SKIP"
               onPress={onPressSkip}
               paddingHorizontal={20}
             />
           </View>
-          <Text className='text-base text-[#404040] font-medium mb-7'>
-            Keep your <Text className='text-[#E97DAF]'>BABY</Text> one
-            looking cute.
+          <Text className="text-base text-[#404040] font-medium mb-7">
+            Keep your <Text className="text-[#E97DAF]">BABY</Text> one looking
+            cute.
           </Text>
           <Input
             placeholder="Enter Mobile OR Email"
@@ -132,22 +124,23 @@ const LogInScreen = ({navigation}: any) => {
             }
             value={userData.password}
             secureTextEntry={showPassword ? false : true}
-           
           />
 
           {error ? <ErrorText text={error} /> : null}
 
-          <View className='flex-row items-center' >
-            <View className='w-2/4'>
+          <View className="flex-row items-center">
+            <View className="w-2/4">
               <PrimaryButton text="LOGIN" onPress={LogInUser} />
             </View>
             <TouchableOpacity onPress={onForgotPassword}>
-              <Text className='text-base font-bold text-darkgray px-7'>Forget Password?</Text>
+              <Text className="text-base font-bold text-darkgray px-7">
+                Forget Password?
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </Layout>
-      <View className='px-[6px] items-center'>
+      <View className="px-[6px] items-center">
         <BottomButton
           text="Don't have account? "
           textBold="Register"
@@ -157,6 +150,5 @@ const LogInScreen = ({navigation}: any) => {
     </View>
   );
 };
-
 
 export default LogInScreen;

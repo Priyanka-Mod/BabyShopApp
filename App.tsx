@@ -8,10 +8,12 @@ import Auth from './src/components/Auth';
 import DrawerNavigation from './src/navigation/DrawerNavigation';
 import { MenuProvider } from 'react-native-popup-menu';
 import SplashScreen from 'react-native-splash-screen'
+import { AuthProvider } from './src/services/useContextService';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
+    <AuthProvider>
     <MenuProvider>
     <NavigationContainer>
         <Stack.Navigator  screenOptions={{
@@ -19,13 +21,15 @@ const App = () => {
         }}
         initialRouteName='Auth'>
           <Stack.Screen name="Auth" component={Auth}/>
-          <Stack.Screen name='DrawerStack' component={DrawerNavigation}/>
+          {/* <Stack.Screen name='DrawerStack' component={DrawerNavigation}/> */}
           <Stack.Screen name='AuthStack' component={AuthNavigation}/>
+          
           <Stack.Screen name='AppStack' component={AppNavigation}/>
           
         </Stack.Navigator>
     </NavigationContainer>
     </MenuProvider>
+    </AuthProvider>
   );
 };
 

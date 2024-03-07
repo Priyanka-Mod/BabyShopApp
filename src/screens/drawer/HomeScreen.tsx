@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -23,9 +23,37 @@ import Swiper from 'react-native-swiper';
 import {Colors} from '../../utils';
 import { DrawerActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../services/firebaseConfig';
+import AsyncStorageService from '../../services/asyncStorageService';
+import { useAuth } from '../../services/useContextService';
 
 const HomeScreen = ({navigation}: any) => {
-  
+  const {setUser} = useAuth();
+
+  const init = useCallback(async () => {
+    const token = await AsyncStorage.getItem('token');
+    console.log('tokenLogIn=> ',token);
+    getDoc(doc(db, 'user', token!)) // getDoc to get document data from doc record having db storage named user having particular id
+    .then(async docSnap => {
+      // gives all stored data from database
+      if (docSnap.exists()) {
+        console.log('User Data:', docSnap.data());
+        // await AsyncStorage.setItem(
+        //   'UserData',
+        //   JSON.stringify(docSnap.data()),
+        // );
+        setUser(docSnap.data())
+        
+      }
+    }).catch(err => console.log(err)
+    )
+    },[])
+    
+    useEffect(() => {
+      init();
+    }, [init]);
+   
 
   const productData = [
     {

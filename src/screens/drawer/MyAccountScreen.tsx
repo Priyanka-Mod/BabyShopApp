@@ -1,5 +1,5 @@
-import React from 'react';
-import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {ActivityIndicator, Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import {Header, PrimaryButton} from '../../components';
 import {
   BoxIcon,
@@ -10,13 +10,27 @@ import {
   MenuIcon,
   PersonIcon,
 } from '../../assets/icon';
-import {CommonActions, DrawerActions} from '@react-navigation/native';
+import {CommonActions, DrawerActions, useFocusEffect} from '@react-navigation/native';
 import {Colors} from '../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {auth} from '../../services/firebaseConfig';
-
+import AsyncStorageService from '../../services/asyncStorageService';
+import { useAuth } from '../../services/useContextService';
+import { useIsFocused } from '@react-navigation/native';
 const MyAccountScreen = ({navigation}: any) => {
-  
+  const {user} = useAuth();
+  const [userDetails,setUserDetails] = useState<any>(user)
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      // Perform actions you want when the screen is focused.
+      // This could be fetching data, re-rendering components, or any other refresh logic.
+      setUserDetails(user)
+    }
+  }, [isFocused]);
+console.log("profileAcc Detail : " , userDetails);
+
+
   const logOut = async () => {
     await auth
       .signOut()
@@ -44,31 +58,31 @@ const MyAccountScreen = ({navigation}: any) => {
           />
         }
       />
-      <View className="bg-lightpink flex-row items-center gap-5 mt-0 p-5 pt-0">
+      {userDetails?<View className="bg-lightpink flex-row items-center gap-5 mt-0 p-5 pt-0">
         <Image
           className="rounded-full"
           source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoM8pM97yLHyPSgw08hWbRvhxaGZzDMGXXBssV0iNANNuBx-uiuroBJpx2yK5J3fyvdoE&usqp=CAU',
+            uri: userDetails.userData.photoURL,
           }}
           height={80}
           width={80}
         />
-        <View>
-          <Text className="text-primary text-lg font-bold">Mark Johnson</Text>
+        {userDetails?<View>
+          <Text className="text-primary text-lg font-bold">{userDetails.userData.displayName}</Text>
           <Text className="text-lightgray text-base font-medium">
             Mobile :{' '}
             <Text className="text-base font-semibold text-[#4B4B4B]">
-              +91 12345 67890
+              +91 {userDetails.userData.phoneNumber}
             </Text>
           </Text>
           <Text className="text-lightgray text-base font-medium">
             Email :{' '}
             <Text className="text-base font-semibold text-[#4B4B4B]">
-              mark1998@gmail.com
+              {userDetails.userData.email}
             </Text>
           </Text>
-        </View>
-      </View>
+        </View>:<ActivityIndicator></ActivityIndicator>}
+      </View>:<ActivityIndicator></ActivityIndicator>}
       <TouchableOpacity
         className="flex-row items-center justify-between p-5"
         onPress={() => navigation.navigate('MyProfile')}>

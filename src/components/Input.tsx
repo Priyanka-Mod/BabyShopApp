@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TextInput,
   TextInputProps,
+  TouchableNativeFeedback,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -34,7 +35,7 @@ export const Input = (props: InputProps) => {
       </View>
       <View className='self-center pr-5'>
         <TouchableOpacity onPress= {props.onIconPress}>
-          {props.icon}
+         <View>{props.icon}</View>
         </TouchableOpacity>
       </View>
     </View>

@@ -15,7 +15,7 @@ const CustomDrawer = (props: any) => {
   console.log("userDetailsinDrawer" , user);
   
   return (
-    <View className="flex-1 my-5 border-b border-b-lightergray">
+    <View className="flex-1 my-5 border-b border-b-lightgray">
       
         {user ?<View className="flex-row gap-4 items-center mx-2">
           <View className="w-20 h-20 items-center justify-center border-2 rounded-full border-primary">

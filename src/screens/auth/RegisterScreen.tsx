@@ -257,22 +257,25 @@ const RegisterScreen = ({navigation}: any) => {
       )
         .then(async userCred => {
           // console.log('userCred:', JSON.stringify(userCred.user.providerData));
-          const childName = userData.childData.map(
-            childData => childData.childName,
-          );
+          // const childName = userData.childData.map(
+          //   childData => childData.childName,
+          // );
 
-          const childGender = userData.childData.map(
-            gender => gender.genderValue,
-          );
+          // const childGender = userData.childData.map(
+          //   gender => gender.genderValue,
+          // );
 
-          const childDOB = userData.childData.map(DOB => DOB.birthDate);
-          const childImage = await Promise.all(
-            userData.childData.map(
-              async item =>
-                await convertUri(item.imagePath as string, item.id.toString()),
-            ),
-          );
-
+          // const childDOB = userData.childData.map(DOB => DOB.birthDate);
+          // const childImage = await Promise.all(
+          //   userData.childData.map(
+          //     async item =>
+          //       await convertUri(item.imagePath as string, item.id.toString()),
+          //   ),
+          // );
+              // const childDetails ={ childName: childName,
+              // childBirthDate: childDOB,
+              // childGender: childGender,
+              // childPhotoURL: childImage,}
 
           //to pass the userData details in database to store it
           const userDetails = {
@@ -280,12 +283,11 @@ const RegisterScreen = ({navigation}: any) => {
             displayName: userData.name,
             phoneNumber: userData.number,
             photoURL: await convertUri(uri, userCred.user.uid),
-            childName: childName,
-            childBirthDate: childDOB,
-            childGender: childGender,
-            childPhotoURL: childImage,
+            childData: userData.childData
+            
           };
-
+          console.log("registration details:" , userDetails);
+          
           const Data = {
             _id: userCred.user.uid, // unique id for the database record
             userData: userDetails, // userData feild that stores all userDetails in it
@@ -570,7 +572,7 @@ const RegisterScreen = ({navigation}: any) => {
                           value={new Date(item.birthDate)}
                           mode="date"
                           onChange={date => {
-                            let birthDate = new Date(
+                            const birthDate = new Date(
                               date.nativeEvent.timestamp,
                             ); //to set we need to do like this for updating the date
                             userData.childData[index].birthDate = birthDate;

@@ -11,15 +11,6 @@ import { useAuth } from '../../services/useContextService';
 // import {userService} from '../../services/asyncStorageService';
 
 const CustomDrawer = (props: any) => {
-  // const [user,setUser] = useState<any>()
-  // useEffect(() => {
-    
-  //   AsyncStorageService.getItem('UserData').then((data:any)=>{
-  //     console.log("dataDrawer" , data);
-      
-  //     setUser(data)
-  //   })
-  // }, []);
   const { user } = useAuth();
   console.log("userDetailsinDrawer" , user);
   

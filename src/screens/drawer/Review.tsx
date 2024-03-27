@@ -9,16 +9,17 @@ const Review = ({navigation}: any) => {
   const [review,setReview] = useState('')
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="Write Review"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('OrderDetails')}
           />
         }
+        onBackPress={() => navigation.navigate('OrderDetails')}
+
       />
       <View className='m-5'>
         <View className='flex-row gap-5 items-center mb-5'>
@@ -33,14 +34,14 @@ const Review = ({navigation}: any) => {
             />
           </View>
 
-          <Text className='text-black text-[15px] mb-1.5 font-medium'>
+          <Text className='text-black  dark:text-white text-[15px] mb-1.5 font-medium'>
             Deeply Nourishing Body Wash....
           </Text>
         </View>
         <Input value="Mark Johnson" />
         <Input value="mark1998@gmail.com" />
-        <View className='items-start px-5 bg-white border-2 mb-5 rounded-xl align-top
-                           border-[#F9F2EE]'>
+        <View className='items-start px-5 bg-white dark:bg-zinc-800 border-2 mb-5 rounded-xl align-top
+                           border-[#F9F2EE] dark:border-zinc-700'>
           <Text className='my-2.5'>Rating</Text>
           <View className='pb-2.5'>
             <Star 

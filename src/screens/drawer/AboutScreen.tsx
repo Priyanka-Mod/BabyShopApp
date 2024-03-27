@@ -4,7 +4,7 @@ import { Text, View } from "react-native";
 const AboutUsScreen = () => {
     return(
         <View>
-            <Text>Offer screen</Text>
+            <Text>about us screen</Text>
         </View>
     )
 }

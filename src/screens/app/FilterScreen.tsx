@@ -10,7 +10,8 @@ import {
 import {Header} from '../../components';
 import {BackWhiteArrowIcon} from '../../assets/icon';
 import {Colors} from '../../utils';
-import CheckBox from '@react-native-community/checkbox';
+import { CheckBox } from '../../components/CheckBox';
+// import CheckBox from '@react-native-community/checkbox';
 
 const FilterScreen = ({navigation}: any) => {
   const [currentId,setCurrentId] = useState<null | string>('1')
@@ -83,21 +84,23 @@ const FilterScreen = ({navigation}: any) => {
       <Header
         title="Filter"
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon height={25} width={25}/>
         }
+        onBackPress={onBackPress}
+
       />
       <View className='flex-row'>
-        <View className='w-2/5 bg-white ' style={styles.filterContainer}>
+        <View className='w-2/5 bg-white dark:bg-zinc-900' style={styles.filterContainer}>
           <View className='h-full'>
             <FlatList
               data={filterData}
               renderItem={({item}) => {
                 return (
                   <View>
-                    <TouchableOpacity
-                      style={{backgroundColor:item.id === currentId? '#FEF1F8' : 'white'}}
+                    <TouchableOpacity className={item.id === currentId ? "bg-[#FEF1F8] dark:bg-zinc-700" : "bg-white dark:bg-zinc-900"}
                       onPress={() => setCurrentId(item.id)}>
-                      <Text className='text-left pl-4 text-xl py-2.5 border-lightergray border-b-2' style={{color:item.id === currentId? Colors.primary : '#9C9C9C'}}>{item.name}</Text>
+                      <Text className={`text-left pl-4 text-xl py-2.5 ${item.id === currentId? 'text-primary' : 'text-[#9C9C9C]'} `}
+                      >{item.name}</Text>
                     </TouchableOpacity>
                   </View>
                 );
@@ -105,7 +108,7 @@ const FilterScreen = ({navigation}: any) => {
             />
           </View>
         </View>
-        <View className='bg-white w-[60%]'>
+        <View className='bg-white dark:bg-zinc-900 w-[60%]'>
           <FlatList
             data={checkBoxData}
             renderItem={({item, index}) => {
@@ -115,22 +118,13 @@ const FilterScreen = ({navigation}: any) => {
                     onPress={() => onCheckPressed(index)}
                     className='flex-row items-center pb-2.5 border-lightgray'>
                     <CheckBox
-                      disabled={false}
-                      value={item.checked}
-                      tintColors={{
-                        true: Colors.primary,
-                        false: '#e2e2e2',
-                      }}
+                      check={item.checked}
                       onValueChange={() => {
                         onCheckPressed(index, item.checked);
                       }}
+                      customLabelStyle={item.checked === true ? 'text-black dark:text-white' : 'text-zinc-500 dark:text-zinc-400'}
+                      label={item.value}
                     />
-                    <Text
-                      style={{
-                        color: item.checked === true ? 'black' : '#cccccc',
-                      }}>
-                      {item.value}
-                    </Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -139,12 +133,12 @@ const FilterScreen = ({navigation}: any) => {
         </View>
       </View>
       <View className='flex-row items-center px-3 border-r-5 border-l-5
-      border-lightgray border-2 h-[50px] absolute bottom-0 z-10 w-full bg-[#f9f9f9]'>
+     border-zinc-300 dark:border-zinc-700 border h-[50px] absolute bottom-0 z-10 w-full bg-[#f9f9f9] dark:bg-zinc-600'>
         <TouchableOpacity className='w-2/4 border-lightgray border-r-2 items-center'>
-          <Text className='text-[17px] font-bold'>CLEAR ALL</Text>
+          <Text className='text-[17px] font-bold text-[#8E8E8E] dark:text-white'>CLEAR ALL</Text>
         </TouchableOpacity>
         <TouchableOpacity className='items-center w-2/4'>
-          <Text className='text-[17px] font-black text-primary text-center'>APPLY</Text>
+          <Text className='text-[17px] font-black text-primary dark:text-pink-500 text-center'>APPLY</Text>
         </TouchableOpacity>
       </View>
     </View>

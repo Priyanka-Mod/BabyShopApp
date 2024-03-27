@@ -9,11 +9,12 @@ const ReviewScreen = ({navigation}: any) => {
     navigation.navigate('ProductDetail');
   };
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon height={25} width={25}/>
         }
+        onBackPress={()=> navigation.goBack()}
         title="Review"
       />
       
@@ -29,7 +30,7 @@ const ReviewScreen = ({navigation}: any) => {
             </View>
             <View>
               <Text
-                className='text-base font-bold text-[#575757] mb-1.5'>
+                className='text-base font-bold text-[#575757] dark:text-white mb-1.5'>
                 Mark Johnson
               </Text>
               <Star size={15} gap={2} value={3} />
@@ -44,7 +45,7 @@ const ReviewScreen = ({navigation}: any) => {
           <View className='my-2.5 mt-0 pt-0 flex-row gap-x-2.5'>
             <View
               className='rounded-full border-[transparent] border w-[50px] h-[50px] items-center justify-center'>
-              <Image
+              <Image className='rounded-full'
                 source={{
                   uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoM8pM97yLHyPSgw08hWbRvhxaGZzDMGXXBssV0iNANNuBx-uiuroBJpx2yK5J3fyvdoE&usqp=CAU',
                 }}
@@ -54,7 +55,7 @@ const ReviewScreen = ({navigation}: any) => {
             </View>
             <View>
               <Text
-                className='text-base font-bold text-[#575757] mb-1.5'>
+                className='text-base font-bold text-[#575757] dark:text-white mb-1.5'>
                 Mark Johnson
               </Text>
               <Star size={15} gap={2} value={3} />
@@ -76,7 +77,7 @@ const ReviewScreen = ({navigation}: any) => {
             </View>
             <View>
               <Text
-                className='text-base font-bold text-[#575757] mb-1.5'>
+                className='text-base font-bold text-[#575757] dark:text-white mb-1.5'>
                 Mark Johnson
               </Text>
               <Star size={15} gap={2} value={3} />
@@ -91,7 +92,7 @@ const ReviewScreen = ({navigation}: any) => {
           <View className='my-2.5 mt-0 pt-0 flex-row gap-x-2.5'>
             <View
               className='rounded-full border-[transparent] border w-[50px] h-[50px] items-center justify-center'>
-              <Image
+              <Image className='rounded-full'
                 source={{
                   uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoM8pM97yLHyPSgw08hWbRvhxaGZzDMGXXBssV0iNANNuBx-uiuroBJpx2yK5J3fyvdoE&usqp=CAU',
                 }}
@@ -101,7 +102,7 @@ const ReviewScreen = ({navigation}: any) => {
             </View>
             <View>
               <Text
-                className='text-base font-bold text-[#575757] mb-1.5'>
+                className='text-base font-bold text-[#575757] dark:text-white mb-1.5'>
                 Mark Johnson
               </Text>
               <Star size={15} gap={2} value={3} />

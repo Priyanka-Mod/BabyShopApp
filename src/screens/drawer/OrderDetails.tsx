@@ -8,16 +8,17 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 const OrderDetails = ({navigation,route}: any) => {
   console.log("props: ",route.params)
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="Order Details"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('MyOrder')}
           />
         }
+        onBackPress={() => navigation.navigate('MyOrder')}
+
       />
       <View className='border-b-2 border-lightergray pb-5 my-2.5'>
         <View className='mx-5'>
@@ -25,15 +26,15 @@ const OrderDetails = ({navigation,route}: any) => {
             Order ID #12345
           </Text>
           <View className='flex-row gap-2.5 items-center'>
-            <Text className='text-base text-primary font-semibold'>
+            <Text className='text-base text-primary dark:text-white font-semibold'>
               MARK JOHNSON
             </Text>
 
-            <View className='flex-row justify-center items-center bg-white border-lightblue border-2 rounded-full px-2.5'>
+            <View className='flex-row justify-center items-center border-lightblue border-2 rounded-full px-2.5'>
               <Text
                 className='
                   text-center
-                  text-blue
+                  text-blue dark:text-lightblue
                   font-semibold
                   text-xs
                 '>
@@ -47,20 +48,20 @@ const OrderDetails = ({navigation,route}: any) => {
                 w-[360]
                 text-[15px]
                 font-medium
-                text-darkgray'
+                text-darkgray dark:text-zinc-400'
               >
               401, Cosmo Complex, Mahila College Circle, Kalawad Rd, Rajkot,
               Gujarat 360001',
             </Text>
             <Text className='text-lightgray font-medium text-[15px]'>
               Mobile :{' '}
-              <Text className='text-base font-semibold text-darkgray'>
+              <Text className='text-base font-semibold text-darkgray dark:text-white'>
                 +91 12345 67890
               </Text>
             </Text>
             <Text className='text-lightgray font-medium text-[15px]'>
               Email :{' '}
-              <Text className='text-base font-semibold text-darkgray'>
+              <Text className='text-base font-semibold text-darkgray dark:text-white'>
                 mark1998@gmail.com
               </Text>
             </Text>
@@ -70,7 +71,7 @@ const OrderDetails = ({navigation,route}: any) => {
                 Deliverd
               </Text>
             </Text>
-            <Text className='text-lightgray font-medium text-[15px]'>Date : <Text className='text-base font-semibold text-darkgray'>
+            <Text className='text-lightgray  font-medium text-[15px]'>Date : <Text className='text-base font-semibold text-darkgray dark:text-white'>
                 30/01/2021
               </Text>
             </Text>
@@ -91,7 +92,7 @@ const OrderDetails = ({navigation,route}: any) => {
             <View>
               <Text
                 className='
-                  text-black
+                  text-black dark:text-white
                   text-[15px]
                   font-medium
                   mb-2'>
@@ -99,19 +100,19 @@ const OrderDetails = ({navigation,route}: any) => {
               </Text>
               <Text className='text-lightgray font-medium text-base'>
                 Brand :{' '}
-      <Text className =  'text-base font-semibold text-darkgray'>
+      <Text className =  'text-base font-semibold text-darkgray dark:text-white'>
                   Mamaearth
                 </Text>
               </Text>
               <Text className='text-lightgray font-medium text-base'>
                 Size :{' '}
-      <Text className='text-base font-semibold text-darkgray'>
+      <Text className='text-base font-semibold text-darkgray dark:text-white'>
                   500 ml
                 </Text>
               </Text>
               <Text className='text-lightgray font-medium text-base'>
                 Color :{' '}
-      <Text className='text-base font-semibold text-darkgray'>
+      <Text className='text-base font-semibold text-darkgray dark:text-white'>
                   White
                 </Text>
               </Text>
@@ -138,7 +139,6 @@ const OrderDetails = ({navigation,route}: any) => {
                   flex-row
                   justify-center
                   items-center
-                  bg-white
                   border-lightblue
                   border-2
                   rounded-md
@@ -148,7 +148,7 @@ const OrderDetails = ({navigation,route}: any) => {
                 <Text
                   className='
                     text-center
-                    text-blue
+                    text-blue dark:text-lightblue
                     font-semibold
                     text-xs'
                   >
@@ -171,7 +171,7 @@ const OrderDetails = ({navigation,route}: any) => {
                 />
               </View>
               <View className ='border-lightergray border-2 rounded-md'>
-                <Text className='text-center'>Qty: 1</Text>
+                <Text className='text-center dark:text-white'>Qty: 1</Text>
               </View>
             </View>
           </View>
@@ -179,26 +179,26 @@ const OrderDetails = ({navigation,route}: any) => {
       </View>
       <View>
       <View className='mx-5'>
-      <Text className='font-medium mb-1 text-black text-lg'>Price Details</Text>
+      <Text className='font-medium mb-1 text-black dark:text-white text-lg'>Price Details</Text>
         <View className='flex-row items-center justify-between'>
           <View>
-              <Text className='text-base font-medium'>Total price</Text>
-              <Text  className='text-base font-medium'>Total Discount</Text>
-              <Text  className='text-base font-medium'>Coupon Code Discount</Text>
-              <Text  className='text-base font-medium text-black'>Grand Total</Text>
+              <Text className='text-base dark:text-zinc-400 font-medium'>Total price</Text>
+              <Text  className='text-base dark:text-zinc-400 font-medium'>Total Discount</Text>
+              <Text  className='text-base dark:text-zinc-400 font-medium'>Coupon Code Discount</Text>
+              <Text  className='text-base font-medium text-black dark:text-white'>Grand Total</Text>
           </View>
           <View>
-            <Text className='text-black text-base font-medium'>Rs.4,139</Text>
-            <Text  className='text-black text-base font-medium self-end'>-Rs.460</Text>
-            <Text  className='text-black text-base font-medium self-end'>-Rs.30</Text>
-            <Text  className='text-primary text-base font-black'>Rs.3,649</Text>
+            <Text className='text-black dark:text-white text-base font-medium'>Rs.4,139</Text>
+            <Text  className='text-black dark:text-white text-base font-medium self-end'>-Rs.460</Text>
+            <Text  className='text-black dark:text-white text-base font-medium self-end'>-Rs.30</Text>
+            <Text  className='text-primary dark:text-pink-500 text-base font-black'>Rs.3,649</Text>
           </View>
         </View>
       </View>
       </View>
 
       <View className='flex-row justify-center items-center px-3 rounded-tr-2xl rounded-tl-2xl
-              border-lightergray border-2 h-14 absolute bottom-0 w-[100%]' style={{
+              border-lightergray  dark:border-zinc-700 border-2 h-14 absolute bottom-0 w-[100%]' style={{
        
       }}>
         <TouchableOpacity onPress={() => navigation.navigate("Account")

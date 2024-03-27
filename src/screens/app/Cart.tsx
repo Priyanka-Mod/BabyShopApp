@@ -7,20 +7,22 @@ import {Dropdown} from 'react-native-element-dropdown';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ProductDetailsType} from '../../types';
+import { useAuth } from '../../services/useContextService';
 
 const Cart = ({navigation}: any) => {
   const [Id, setId] = useState('');
   const [productCartData, setProductData] = useState<ProductDetailsType[]>();
   const [totalPrice , setTotalPrice] = useState(0)
   const [discountPrice , setDiscountPrice] = useState(0)
+  const { user } = useAuth();
 
   useEffect(() => {
-    (async () => {
-      try {
+    
         // Alert.alert('useEffect Called!')
-        const userData = await AsyncStorage.getItem('UserData');
-        const userDataObj = JSON.parse(userData as string);
-        setId(userDataObj.userData.uid);
+        const userDetails = user
+        const userData = userDetails?.userData
+        // const userDataObj = JSON.parse(userData as string);
+        setId(userData?.uid);
         let docRef = firestore().collection('cartProducts').doc(Id);
 
         docRef.get().then(res => {
@@ -44,11 +46,7 @@ const Cart = ({navigation}: any) => {
             setDiscountPrice(discount)
             
           }
-        });
-      } catch (err) {
-        console.log('error :', err);
-      }
-    })();
+        })
   }, [Id]);
 
   const deleteProduct = (item: ProductDetailsType) => {
@@ -103,7 +101,7 @@ const Cart = ({navigation}: any) => {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white dark:bg-zinc-900">
       <Header
         title="Cart"
         iconLeft={
@@ -111,9 +109,9 @@ const Cart = ({navigation}: any) => {
             width={25}
             height={25}
             fill={'white'}
-            onPress={() => navigation.navigate('Drawer')}
           />
         }
+        onBackPress={() => navigation.navigate('Drawer')}
       />
 
       {productCartData?.length ? (
@@ -127,7 +125,7 @@ const Cart = ({navigation}: any) => {
             renderItem={({item, index}) => {
               return (
                 <View className="my-5 border-b border-lightergray pb-1.5">
-                  <View className="mx-4 flex-row gap-x-[25px] pb-2.5 ml-0">
+                  <View className="mx-4 flex-row  justify-between gap-x-[20px] pb-2.5 ml-0">
                     <View className="gap-y-5">
                       <View className="border-lightergray rounded-xl border-2">
                         <Image
@@ -142,10 +140,11 @@ const Cart = ({navigation}: any) => {
                       </View>
                       <Dropdown
                         style={{
-                          borderColor: '#9ED4EE',
+                          borderColor:'#9ED4EE',
                           borderWidth: 2,
                           borderRadius: 5,
                           paddingHorizontal: 5,
+              
                         }}
                         placeholder="Qty : 1"
                         data={[
@@ -153,40 +152,42 @@ const Cart = ({navigation}: any) => {
                           {label: 'Qty : 2', value: '2'},
                           {label: 'Qty : 3', value: '3'},
                         ]}
+                        placeholderStyle = {{color:"#999999"}}
+                        selectedTextStyle={{color:"#999999"}}
                         value={item.qty}
                         onChange={qtyValue => updateQty(index, qtyValue.value)}
                         labelField={'label'}
                         valueField={'value'}
                       />
                     </View>
-                    <View className="flex-row items-start justify-between">
+                    <View className="flex-row items-start">
                       <View>
-                        <Text className="text-black text-[15px] font-medium mb-1.5 w-[220px]">
+                        <Text className="text-black dark:text-white text-[15px] font-medium mb-1.5 w-[220px]">
                           {item.productName}
                         </Text>
                         <Text className="text-[#b0b0b0] text-[15px]">
                           Brand :{' '}
-                          <Text className="text-[15px] font-medium text-darkgray">
+                          <Text className="text-[15px] font-medium text-darkgray dark:text-zinc-400">
                             {item.brand}
                           </Text>
                         </Text>
                         <Text className="text-[#b0b0b0] text-[15px]">
                           Size :{' '}
-                          <Text className="text-[15px] font-medium text-darkgray">
+                          <Text className="text-[15px] font-medium text-darkgray dark:text-zinc-400">
                             {item.size}
                           </Text>
                         </Text>
                         <Text className="text-[#b0b0b0] text-[15px]">
                           Color :{' '}
-                          <Text className="text-[15px] font-medium text-darkgray">
+                          <Text className="text-[15px] font-medium text-darkgray dark:text-zinc-400">
                             White
                           </Text>
                         </Text>
-                        <Text className="text-primary text-sm font-extrabold pt-2">
-                        {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
+                        <Text className="text-primary dark:text-pink-500 text-sm font-extrabold pt-2">
+                        Rs. {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
                           <Text className="text-lightgray text-xs line-through">
                             {' '}
-                            {Number(item.actualPrice).toLocaleString('en-US')}.00
+                            Rs. {Number(item.actualPrice).toLocaleString('en-US')}.00
                           </Text>
                         </Text>
                       </View>
@@ -203,26 +204,26 @@ const Cart = ({navigation}: any) => {
             }}
           />
 
-          <View className="absolute bottom-0 p-5 w-full bg-lightpink ">
-            <Text className="font-extrabold mb-1.5 text-primary text-lg">
+          <View className="absolute bottom-0 p-5 w-full bg-lightpink  dark:bg-zinc-800">
+            <Text className="font-extrabold mb-1.5 text-primary  dark:text-pink-400 text-lg">
               Price Details
             </Text>
             <View className="flex-row items-center justify-between">
               <View>
-                <Text className="text-base font-medium">Total price</Text>
-                <Text className="text-base font-medium">Total Discount</Text>
-                <Text className="text-base font-medium text-black">
+                <Text className="text-base font-medium text-zinc-700 dark:text-zinc-400">Total price</Text>
+                <Text className="text-base font-medium text-zinc-700 dark:text-zinc-400">Total Discount</Text>
+                <Text className="text-base font-medium text-black dark:text-zinc-400">
                   Grand Total
                 </Text>
               </View>
               <View>
-                <Text className="text-black text-base font-medium">
+                <Text className="text-black dark:text-white text-base font-medium">
                   Rs.{Number(totalPrice).toLocaleString('en-US')}
                 </Text>
-                <Text className="text-black text-base font-medium ">
+                <Text className="text-black text-base  dark:text-white font-medium ">
                   -Rs.{Number(discountPrice).toLocaleString('en-US')}
                 </Text>
-                <Text className="text-primary text-base font-black">
+                <Text className="text-primary  dark:text-pink-400 text-base font-black">
                   Rs.{(Number(totalPrice) - Number(discountPrice)).toLocaleString('en-US')}
                 </Text>
               </View>

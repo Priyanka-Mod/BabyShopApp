@@ -15,16 +15,19 @@ const AddAddress = ({navigation}: any) => {
   }
   return (
     <View 
-    className='bg-white flex-1'>
+    className='bg-white dark:bg-zinc-900 flex-1'>
       <Header
         title="Add Address"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('MyAddress')}
+
           />
+
         }
+        onBackPress={() => navigation.navigate('MyAddress')}
+
       />
       <View className='px-6 my-6'>
         <Input placeholder="Full Name" />
@@ -37,8 +40,10 @@ const AddAddress = ({navigation}: any) => {
               styles.dropDown,
               {borderColor: focus.city ? '#E97DAF' : '#F9F2EE'},
             ]}
-            placeholderStyle={{color: focus.city ? 'black' : '#BDBDBD'}}
-            selectedTextStyle={{color: focus.city ? 'black' : '#BDBDBD'}}
+            placeholderStyle = {{color:"#999999"}}
+                        selectedTextStyle={{color:"#999999"}}
+            // placeholderStyle={{color: focus.city ? 'black' : '#BDBDBD'}}
+            // selectedTextStyle={{color: focus.city ? 'black' : '#BDBDBD'}}
             data={[
               {
                 label:'Rajkot',
@@ -69,8 +74,10 @@ const AddAddress = ({navigation}: any) => {
               styles.dropDown,
               {borderColor: focus.state ? '#E97DAF' : '#F9F2EE'},
             ]}
-            placeholderStyle={{color: focus.state ? 'black' : '#BDBDBD'}}
-            selectedTextStyle={{color: focus.state ? 'black' : '#BDBDBD'}}
+            placeholderStyle = {{color:"#999999"}}
+            selectedTextStyle={{color:"#999999"}}
+            // placeholderStyle={{color: focus.state ? 'black' : '#BDBDBD'}}
+            // selectedTextStyle={{color: focus.state ? 'black' : '#BDBDBD'}}
             data={[
               {
                 label:'Gujarat',
@@ -103,8 +110,10 @@ const AddAddress = ({navigation}: any) => {
               {borderColor: focus.country ? '#E97DAF' : '#F9F2EE'},
               {width:'100%'}
             ]}
-            placeholderStyle={{color: focus.country ? 'black' : '#BDBDBD'}}
-            selectedTextStyle={{color: focus.country ? 'black' : '#BDBDBD'}}
+            placeholderStyle = {{color:"#999999"}}
+                        selectedTextStyle={{color:"#999999"}}
+            // placeholderStyle={{color: focus.country ? 'black' : '#BDBDBD'}}
+            // selectedTextStyle={{color: focus.country ? 'black' : '#BDBDBD'}}
             data={[
               {
                 label:'India',
@@ -131,8 +140,10 @@ const AddAddress = ({navigation}: any) => {
               {borderColor: focus.addressType ? '#E97DAF' : '#F9F2EE'},
               {width:'100%'}
             ]}
-            placeholderStyle={{color: focus.addressType ? 'black' : '#BDBDBD'}}
-            selectedTextStyle={{color: focus.addressType ? 'black' : '#BDBDBD'}}
+            placeholderStyle = {{color:"#999999"}}
+                        selectedTextStyle={{color:"#999999"}}
+            // placeholderStyle={{color: focus.addressType ? 'black' : '#BDBDBD'}}
+            // selectedTextStyle={{color: focus.addressType ? 'black' : '#BDBDBD'}}
             data={[
               {
                 label:'Home',

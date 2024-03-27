@@ -33,10 +33,11 @@ import LogOutIcon from './door-check-out-icon.svg'
 import MoreIcon from './ellipsis-v-icon.svg'
 import DeleteIcon from './delete-icon.svg'
 import GalleryIcon from './photo-gallery-icon.svg'
+import ThemeIcon from './ThemeIcon.svg'
 export{
     UserIcon , OpenEyeIcon , CloseEyeIcon , BackArrowIcon, BackWhiteArrowIcon , CameraIcon , 
     PlusIcon, GoogleIcon , FacebookIcon , CalendarIcon , CrossIcon , CartIcon , BellIcon ,
     ForwardButtonIcon , MenuIcon,HomeIcon,PersonIcon,OfferIcon,ReferIcon,WalletIcon,
-    AboutusIcon,TruckIcon,PrivacyIcon,HelpIcon,ContactIcon,HeartIcon,CheckeedIcon,
+    AboutusIcon,TruckIcon,PrivacyIcon,HelpIcon,ContactIcon,HeartIcon,CheckeedIcon,ThemeIcon,
     LocationIcon , ChildIcon , BoxIcon, EditIcon ,LogOutIcon,MoreIcon, DeleteIcon, GalleryIcon
 }

@@ -6,7 +6,7 @@ import { Colors } from "../../utils";
 
 const QueAnsScreen = ({navigation}:any) => {
     const onBackPress = () => {
-        navigation.navigate("ProductDetail")
+        navigation.goBack()
     }
     const [queData,setQueData] = useState([
         {
@@ -67,7 +67,7 @@ const QueAnsScreen = ({navigation}:any) => {
                                 >{item.Que}{JSON.stringify(item.show)}</Text>
                             
                                 </TouchableOpacity>
-                               {item.show? <View className="flex-1"><Text className="font-extrabold text-[#424242]">{item.Ans}</Text></View> :
+                               {item.show? <View className="flex-1"><Text className="font-extrabold text-[#424242] dark:text-white">{item.Ans}</Text></View> :
                                null}
                     </View>
                 )
@@ -76,10 +76,11 @@ const QueAnsScreen = ({navigation}:any) => {
         )
     },[queData])
     return(
-        <View className="flex-1 bg-white">
-            <Header title="Question & Answer" iconLeft={<BackWhiteArrowIcon width={25} height={25} onPress={onBackPress}/>}/>
-            <TouchableOpacity className="bg-[#FEF1F8] py-2.5" onPress={()=>navigation.navigate('AskQue')}>
-                <Text className="text-center text-lg font-normal text-primary" >Ask Questions?</Text>
+        <View className="flex-1 bg-white dark:bg-zinc-900">
+            <Header title="Question & Answer" iconLeft={<BackWhiteArrowIcon width={25} height={25} />}
+            onBackPress={onBackPress}/>
+            <TouchableOpacity className="bg-[#FEF1F8] dark:bg-zinc-800 py-2.5" onPress={()=>navigation.navigate('AskQue')}>
+                <Text className="text-center text-lg font-normal text-primary dark:text-pink-500" >Ask Questions?</Text>
             </TouchableOpacity>
             {renderQueList()}
         </View>

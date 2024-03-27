@@ -39,17 +39,19 @@ const MyProfile = ({navigation}: any) => {
     // AsyncStorageService.setItem('UserData',user)
   };
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white dark:bg-zinc-900">
       <Header
         title="My Profile"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('Account')}
           />
         }
+        onBackPress={() => navigation.navigate('Account')}
+
         rightIcon1={<EditIcon height={20} width={20} fill={'white'} />}
+        // onPressRightIcon={() => }
       />
       {user ? (
         <View className="mx-5">

@@ -209,7 +209,7 @@ const HomeScreen = ({navigation}: any) => {
               <Image
               className='flex-1'
                 source={{
-                  uri: 'https://scontent-bom1-2.xx.fbcdn.net/v/t1.6435-9/59697289_2286407284758210_1163771146047324160_n.jpg?stp=dst-jpg_p526x296&_nc_cat=108&ccb=1-7&_nc_sid=7f8c78&_nc_ohc=UpRG6emNjXsAX-6n7UJ&_nc_ht=scontent-bom1-2.xx&oh=00_AfClAISNkHTSUhfvCR4cO3oB4rqRE0pSHecRTx6KtseMQg&oe=65F695B9',
+                  uri: 'https://5.imimg.com/data5/SELLER/Default/2021/1/KD/AA/SH/120386859/baby-care-kit-500x500.jpg',
                 }}
               />
             </View>
@@ -233,7 +233,7 @@ const HomeScreen = ({navigation}: any) => {
         </View>
         <View className='my-2.5 mx-5' >
           <View className='flex-row justify-between items-center'>
-            <Text className='text-xl font-semibold text-primary'>Categories</Text>
+            <Text className='text-xl font-semibold text-primary dark:text-white'>Categories</Text>
             <ForwardButtonIcon
               height={15}
               width={15}
@@ -249,10 +249,10 @@ const HomeScreen = ({navigation}: any) => {
   const renderFooterComponent = () => {
     return (
       <>
-        <View className='bg-lightpink'>
+        <View className='bg-lightpink dark:bg-zinc-800'>
           <View className='my-2.5 mx-5'>
             <View className='flex-row justify-between items-center'>
-              <Text className='text-xl font-semibold text-primary'>Brands</Text>
+              <Text className='text-xl font-semibold text-primary dark:text-white'>Brands</Text>
               <ForwardButtonIcon
                 height={15}
                 width={15}
@@ -286,8 +286,10 @@ const HomeScreen = ({navigation}: any) => {
         </View>
 
         <View className='my-2.5 mx-5'>
-          <Text className='text-xl font-semibold text-primary'>Trending</Text>
+          <Text className='text-xl font-semibold text-primary dark:text-white'>Trending</Text>
+         <View className='flex-row flex-wrap justify-center'> 
           <ProductCard productData={productData}/>
+          </View>
         </View>
       </>
     );
@@ -299,12 +301,14 @@ const HomeScreen = ({navigation}: any) => {
     <View>
       <Header
         title="Dashboard"
-        iconLeft={<MenuIcon fill={'white'} height={25} width={25} onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}/>}
-        
-        rightIcon1={<CartIcon height={18} width={20} fill={'white'} onPress={onCartPress} />}
-        rightIcon2={<BellIcon height={25} width={25} fill={'white'} onPress={() => navigation.navigate('Notification')}/>}
+        iconLeft={<MenuIcon fill={'white'} height={25} width={25}/>}
+        onBackPress={() =>  navigation.dispatch(DrawerActions.toggleDrawer())}
+        rightIcon1={<CartIcon height={18} width={20} fill={'white'}  />}
+        onPressRightIcon={onCartPress}
+        rightIcon2={<BellIcon height={25} width={25} fill={'white'} />}
+        onPressRighterIcon={() => navigation.navigate('Notification')}
       />
-      <View className='bg-white'>
+      <View className='bg-white dark:bg-zinc-900'>
         <FlatList
           scrollEnabled 
           showsVerticalScrollIndicator={false}
@@ -324,7 +328,7 @@ const HomeScreen = ({navigation}: any) => {
                       width: 70,
                     }}
                   />
-                  <Text className='text-center text-[11px] mt-1 text-black font-normal' >{item.imageCaption}</Text>
+                  <Text className='text-center text-[11px] mt-1 text-black dark:text-white font-normal' >{item.imageCaption}</Text>
                 </TouchableOpacity>
               </View>
             );

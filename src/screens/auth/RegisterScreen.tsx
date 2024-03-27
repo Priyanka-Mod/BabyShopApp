@@ -1,13 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   FlatList,
   Image,
   Modal,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {
   ErrorText,
@@ -27,16 +29,16 @@ import {
   GoogleIcon,
   PlusIcon,
 } from '../../assets/icon';
-import {Colors} from '../../utils';
-import {Dropdown} from 'react-native-element-dropdown';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { Colors } from '../../utils';
+import { Dropdown } from 'react-native-element-dropdown';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import VerifyMobileScreen from './VerifyMobileScreen';
-import {parsePhoneNumber} from 'libphonenumber-js';
-import {createUserWithEmailAndPassword} from 'firebase/auth';
-import {auth, db} from '../../services/firebaseConfig';
+import { parsePhoneNumber } from 'libphonenumber-js';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../services/firebaseConfig';
 import * as ImagePicker from 'react-native-image-picker';
-import {setDoc, doc, loadBundle} from 'firebase/firestore';
+import { setDoc, doc, loadBundle } from 'firebase/firestore';
 import storage from '@react-native-firebase/storage';
 
 interface Action {
@@ -71,9 +73,12 @@ const actions: Action[] = [
   },
 ];
 
-const RegisterScreen = ({navigation}: any) => {
-  const [userData, setUserData] = useState<{userImage:string,name:string,email:string,number:string,password:string,childData:
-    [{id:number,imagePath:string | undefined ,childName:string,genderValue:string,birthDate:Date }]}>({
+const RegisterScreen = ({ navigation }: any) => {
+  const [currentIndex , setCurrentIndex] = useState(0)
+  const [userData, setUserData] = useState<{
+    userImage: string, name: string, email: string, number: string, password: string, childData:
+      [{ id: string, imagePath: string | undefined, childName: string, genderValue: string, birthDate: Date }]
+  }>({
     userImage: '',
     name: '',
     email: '',
@@ -81,7 +86,7 @@ const RegisterScreen = ({navigation}: any) => {
     password: '',
     childData: [
       {
-        id: Math.random(),
+        id: Math.random().toString(),
         imagePath: '',
         childName: '',
         genderValue: '',
@@ -98,7 +103,7 @@ const RegisterScreen = ({navigation}: any) => {
   const [error, setError] = useState('');
 
   const changeUserData = (key: string, value: string) => {
-    setUserData(prev => ({...prev, [key]: value}));
+    setUserData(prev => ({ ...prev, [key]: value }));
   };
   const [response, setResponse] = React.useState<any>(null);
   const setChildData = () => {
@@ -119,7 +124,8 @@ const RegisterScreen = ({navigation}: any) => {
     }
   }, []);
   const onChildButtonPress = React.useCallback(
-    async (type: any, options: any, item?: any) => {
+    async (type: any, options: any,item?: any,) => {
+      console.log("ItemSelected : ",type , " " , options , ' ' , item)
       if (type === 'capture') {
         const result = await ImagePicker.launchCamera(options, setResponse);
         if (item) {
@@ -138,10 +144,11 @@ const RegisterScreen = ({navigation}: any) => {
           setResponse,
         );
         if (item) {
-          console.log('item: ', item);
+          // Alert.alert(item)
+          // console.log('itemSelected: ', index);
 
           const index = userData.childData.findIndex(it => it.id === item.id);
-
+          console.log("result for image : " , result)
           userData.childData[index].imagePath = result.assets
             ? result.assets[0].uri
             : '';
@@ -157,7 +164,7 @@ const RegisterScreen = ({navigation}: any) => {
 
   const addChild = () => {
     userData.childData.push({
-      id: Math.random(),
+      id: Math.random().toString(),
       imagePath: '',
       childName: '',
       genderValue: '',
@@ -219,11 +226,12 @@ const RegisterScreen = ({navigation}: any) => {
     console.log('convertURI :', uri, '  ', id);
     let url = '';
     const reference = storage().ref(id); // Create a storage reference from our storage service by taking our image id to it
-    await reference.putFile(uri.replace('file://', '')); //putFile() method automatically infers the MIME type from the File extension upload it in storage
+    await reference.putFile(uri.replace('file://', ''));
+    //putFile() method automatically infers the MIME type from the File extension upload it in storage
     await reference
       .getDownloadURL()
       .then(res => {
-        console.log('res: ', res);
+        console.log('resOfConverted URL: ', res);
         url = res;
       })
       .catch(err => console.log('error in function: ', err)); // to download url from storage for using it further in code
@@ -272,29 +280,42 @@ const RegisterScreen = ({navigation}: any) => {
           //       await convertUri(item.imagePath as string, item.id.toString()),
           //   ),
           // );
-              // const childDetails ={ childName: childName,
-              // childBirthDate: childDOB,
-              // childGender: childGender,
-              // childPhotoURL: childImage,}
+          // const childDetails ={ childName: childName,
+          // childBirthDate: childDOB,
+          // childGender: childGender,
+          // childPhotoURL: childImage,}
 
           //to pass the userData details in database to store it
+          const childDataValues = await Promise.all(userData.childData.map(async (res) => {
+            console.log("responseData date : ", res.birthDate)
+            return { ...res, imagePath: await convertUri(res.imagePath || '', res.id.toString()) }
+          }))
+          console.log("BeforeConvert data", userData.childData);
+
+          console.log('converted childdata : ', childDataValues);
+
           const userDetails = {
             ...userCred.user.providerData[0],
             displayName: userData.name,
             phoneNumber: userData.number,
             photoURL: await convertUri(uri, userCred.user.uid),
-            childData: userData.childData
-            
-          };
-          console.log("registration details:" , userDetails);
-          
+            childData: childDataValues
+
+            // }
+            // );
+          }
+
+          // };
+          console.log("registration details:", userDetails);
+
           const Data = {
             _id: userCred.user.uid, // unique id for the database record
             userData: userDetails, // userData feild that stores all userDetails in it
           };
           console.log('data: ', Data);
 
-          setDoc(doc(db, 'user', userCred.user.uid), Data) // setDoc is used to create or update a document in a collection ,
+          setDoc(doc(db, 'user', userCred.user.uid), Data)
+            // setDoc is used to create or update a document in a collection ,
             // doc is a lightweight record that contains fields, which map to values. Each document is identified by a name. ,
             // db is getStorage from firebase const exported from firebase service it is ,
             // user is collection name
@@ -302,14 +323,14 @@ const RegisterScreen = ({navigation}: any) => {
             // Data is the main data to be stored
 
             .then(() =>
-              navigation.navigate('VerifyMobile', {number: userData.number}),
+              navigation.navigate('VerifyMobile', { number: userData.number }),
             );
         })
         .catch(err => console.log('error:', err));
     }
   };
 
-  const delChildObject = (id: number) => {
+  const delChildObject = (id: string) => {
     let index = userData.childData.findIndex(item => {
       return item.id === id;
     });
@@ -321,29 +342,30 @@ const RegisterScreen = ({navigation}: any) => {
     });
   };
   const onBackPress = () => {
-    navigation.navigate('LogIn');
+    navigation.goBack();
   };
   const genderData = [
-    {label: 'Male', value: 'male'},
-    {label: 'Female', value: 'female'},
+    { label: 'Male', value: 'male' },
+    { label: 'Female', value: 'female' },
   ];
 
 
-  
-  // console.log("response:" ,response);
 
+  // console.log("response:" ,response);
+  const {height, width} = useWindowDimensions();
   return (
-    <Layout>
+    <View className='px-5 bg-white'>
       <Header
         auth
-        onBackPress={onBackPress}
         iconLeft={<BackArrowIcon height={28} width={28} />}
+        onBackPress={onBackPress}
+
         title="REGISTER"
       />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <View className='flex-1 mt-5'>
           <View className='border-primary border-2 rounded-full flex-row mb-5 self-center , h-20 w-20'>
-            
+
             <TouchableOpacity
               className='flex-1 justify-center items-center'
               onPress={() => setParentModal(true)}>
@@ -372,7 +394,7 @@ const RegisterScreen = ({navigation}: any) => {
                     onPress={() => setParentModal(false)}
                   />
                 </TouchableOpacity>
-                {actions.map(({title, type, options}) => {
+                {actions.map(({ title, type, options }) => {
                   return (
                     <View className='flex-1 w-full'>
                       {type === 'capture' ? (
@@ -432,12 +454,14 @@ const RegisterScreen = ({navigation}: any) => {
           />
           <FlatList
             data={userData.childData}
-            renderItem={({item, index}) => {
+            renderItem={({ item, index }) => {
+              // console.log("item length : " , index);
+              
               return (
                 <View>
                   <View className='flex-row items-start'>
-                    <View className='border-primary border-2 rounded-full flex-row mb-5 h-12 w-12 mr-[18px]'
-                     >
+                    <View className='border-primary border-2 rounded-full flex-row mb-5 h-12 w-12 mr-[14px]'
+                    >
                       <TouchableOpacity
                         className='flex-1 justify-center items-center'
                         onPress={() => setModal(true)}>
@@ -470,13 +494,13 @@ const RegisterScreen = ({navigation}: any) => {
                               onPress={() => setModal(false)}
                             />
                           </TouchableOpacity>
-                          {actions.map(({title, type, options}) => {
+                          {actions.map(({ title, type, options }) => {
                             return (
                               <View className='flex-1 w-full'>
                                 {type === 'capture' ? (
                                   <TouchableOpacity className='flex-row gap-5 items-center'
                                     onPress={() => {
-                                      onChildButtonPress(type, options, item);
+                                      onChildButtonPress(type, options,item);
                                       setModal(false);
                                     }}>
                                     <CameraIcon
@@ -491,7 +515,9 @@ const RegisterScreen = ({navigation}: any) => {
                                 ) : (
                                   <TouchableOpacity className='flex-row gap-5 items-center'
                                     onPress={() => {
-                                      onChildButtonPress(type, options, item);
+                                      onChildButtonPress(type, options ,item);
+                                      console.log("Selected item:" , item);
+                                      
                                       setModal(false);
                                     }}>
                                     <GalleryIcon
@@ -510,7 +536,7 @@ const RegisterScreen = ({navigation}: any) => {
                         </View>
                       </Modal>
                     </View>
-                    <View style={{width: index > 0 ? 245 : 290}}>
+                    <View style={{ width: index > 0 ? 245 : 290 }}>
                       <Input
                         placeholder="Enter Child Name"
                         value={item.childName}
@@ -521,25 +547,27 @@ const RegisterScreen = ({navigation}: any) => {
                       />
                     </View>
                     {index > 0 ? (
-                      <View className='mt-2.5 ml-2.5'>
+                      <TouchableOpacity className='mt-2.5 ml-2.5' onPress={() => delChildObject(item.id)}>
                         <CrossIcon
                           height={30}
                           width={30}
                           onPress={() => delChildObject(item.id)}
                         />
-                      </View>
+                      </TouchableOpacity>
                     ) : null}
                   </View>
 
                   <View className='flex-row justify-center'>
                     <View className='mr-[18px] w-[45%]'>
                       <Dropdown
+                      placeholderStyle = {{color:"#999999"}}
+                      selectedTextStyle={{color:"#999999"}}
                         style={[
                           styles.dropDown,
-                          {borderColor: focus ? '#E97DAF' : '#F9F2EE'},
+                          { borderColor: focus ? '#E97DAF' : '#F9F2EE' },
                         ]}
-                        placeholderStyle={{color: focus ? 'black' : '#BDBDBD'}}
-                        selectedTextStyle={{color: focus ? 'black' : '#BDBDBD'}}
+                        // placeholderStyle={{ color: focus ? 'black' : '#BDBDBD' }}
+                        // selectedTextStyle={{ color: focus ? 'black' : '#BDBDBD' }}
                         data={genderData}
                         placeholder="Gender"
                         value={item.genderValue}
@@ -563,11 +591,12 @@ const RegisterScreen = ({navigation}: any) => {
                             fill={'#A0A0A0'}
                           />
                         }
-                        onIconPress={() => setSelectDate(true)}
+                        onIconPress={() => {
+                          setCurrentIndex(index)
+                          setSelectDate(true)}}
                         value={new Date(item.birthDate).toDateString()}
-                        // onChangeText={() => new Date(item.birthDate).toDateString()}
                       />
-                      {selectDate && (
+                      {selectDate && index === currentIndex && (
                         <RNDateTimePicker
                           value={new Date(item.birthDate)}
                           mode="date"
@@ -575,7 +604,8 @@ const RegisterScreen = ({navigation}: any) => {
                             const birthDate = new Date(
                               date.nativeEvent.timestamp,
                             ); //to set we need to do like this for updating the date
-                            userData.childData[index].birthDate = birthDate;
+                            userData.childData[currentIndex].birthDate = birthDate;
+                            console.log("Date : " ,birthDate ,"index of date: " ,index , "setting date: " ,JSON.stringify(userData.childData[index].birthDate) ) 
                             setChildData();
                             // setDate(new Date(date.nativeEvent.timestamp)), //to set we need to do like this for updating the date
                             setSelectDate(false);
@@ -596,13 +626,13 @@ const RegisterScreen = ({navigation}: any) => {
           {error ? <ErrorText text={error} /> : null}
           <PrimaryButton text="VERIFY MOBILE" onPress={onVerifyMobile} />
 
-          <View className='flex-row justify-center my-5'>
+          <View className='flex-row justify-center mt-5 mb-4'>
             <View className='border-[#a2a2a2] h-px self-center border w-28' ></View>
             <Text className='font-bold text-xl text-[#a2a2a2]'> OR </Text>
             <View className='border-[#a2a2a2] h-px self-center border w-28'></View>
           </View>
 
-          <View className='flex-row mb-7 gap-[18px]'>
+          <View className='flex-row pb-16 pt-0 mt-0 gap-[18px]'>
             <TouchableOpacity className='px-5 h-10 flex-1 flex-row items-center justify-center border-2 rounded-full border-lightergray'>
               <FacebookIcon height={20} width={20} fill={'#29468B'} />
               <Text className='font-bold text-[13px]'> Login with Facebook</Text>
@@ -614,7 +644,7 @@ const RegisterScreen = ({navigation}: any) => {
           </View>
         </View>
       </KeyboardAwareScrollView>
-    </Layout>
+    </View>
   );
 };
 

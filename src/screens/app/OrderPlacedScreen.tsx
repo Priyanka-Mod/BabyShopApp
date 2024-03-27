@@ -19,12 +19,13 @@ const OrderPlacedScreen = () => {
         navigation.navigate('MyOrder')
     }
     return(
-        <View className="bg-white flex-1">
-            <Header backgrndTransparent iconLeft={<BackArrowIcon height={25} width={25} onPress={() => navigation.goBack()}/>}/>
+        <View className="bg-white dark:bg-zinc-400 flex-1">
+            <Header backgrndTransparent iconLeft={<BackArrowIcon height={25} width={25} />}
+            onBackPress={() => navigation.goBack()}/>
             <View className="flex-1 items-center justify-center">
                 <CheckeedIcon height={60} width={60} fill={Colors.primary}/>
                 <Text className="mt-5 text-xl font-extrabold text-black">ORDER PLACED!</Text>
-                <Text className="my-[15px] w-[250px] font-bold text-base text-center">
+                <Text className="my-[15px] w-[70%] font-bold text-base text-zinc-500 text-center">
                     Your order was placed sucessfully. For more details, check delivery status under my account tab...
                 </Text>
                 <View className="w-[250px]">

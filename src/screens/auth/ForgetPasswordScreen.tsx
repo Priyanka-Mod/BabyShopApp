@@ -11,14 +11,14 @@ const ForgetPasswordScreen = ({navigation}: any) => {
     navigation.navigate('LogIn');
   };
   return (
-    <Layout>
+    <View className='flex-1 px-5 bg-white'>
       <Header
         auth
         iconLeft={<BackArrowIcon height={25} width={25} />}
         onBackPress={onBackPress}
       />
       <View className='flex-1 justify-center'>
-        <View className='w-[90%]'>
+        <View>
           <Text className='text-3xl font-bold text-primary'>FORGOT PASSWORD?</Text>
 
           <Text className='text-sm text-[#404040] font-medium mb-7' >
@@ -34,7 +34,7 @@ const ForgetPasswordScreen = ({navigation}: any) => {
 
         <PrimaryButton text="GET LINK" onPress={onSumbit} />
       </View>
-    </Layout>
+    </View>
   );
 };
 

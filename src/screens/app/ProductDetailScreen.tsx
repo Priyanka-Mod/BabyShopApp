@@ -22,11 +22,115 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {doc, getDoc, setDoc} from 'firebase/firestore';
 import {ProductDetailsType} from '../../types';
+import { useAuth } from '../../services/useContextService';
 
 const ProductDetailScreen = ({route, navigation}: any) => {
   const productData = route.params;
-  console.log('selectedProduct : ', productData);
+  const suggestedProducts =[
+    {
+      id: '1',
+      productUrl:
+        'https://images.mamaearth.in/catalog/product/d/n/dnbw-1_hfoavdvwmgs9qmxd_white_bg.jpg?fit=contain&height=600',
+      productName: 'Deeply Nourishing Body Wash',
+      productPrice: '4139',
+      actualPrice: '4599',
+      discount: '-10%',
+      size:'500ml',
+      brand:'Mamaearth',
+      qty:1
+    },
+    {
+      id: '2',
+      productUrl: 'https://m.media-amazon.com/images/I/51bbFLQbsBL.jpg',
+      productName: 'All We Know Baby Bubble Bath ',
+      productPrice: '379',
+      actualPrice: '459',
+      discount: '-5%',
+      size:'200ml',
+      brand:'Mamaearth',
+      qty:1
 
+    },
+    {
+      id: '3',
+      productUrl:
+        'https://www.chicco.in/dw/image/v2/BGMM_PRD/on/demandware.static/-/Sites-chicco-master/default/dwe073c429/combo/grpcd042.png?sw=800&sh=800&sm=fit',
+      productName: 'Deeply Nourishing Chicco Body Wash',
+      productPrice: '4139',
+      actualPrice: '4599',
+      discount: '-10%',
+      size:'500ml',
+      brand:'Chicco',
+      qty:1
+
+    },
+    {
+      id: '4',
+      productUrl:
+        'https://www.jiomart.com/images/product/original/491334908/chicco-baby-moments-no-tears-shampoo-500-ml-product-images-o491334908-p590106051-0-202203150239.jpg?im=Resize=(1000,1000)',
+      productName: 'Chicco Baby Moments no-tears Shampoo',
+      productPrice: '499',
+      actualPrice: '599',
+      discount: '-5%',
+      size:'500ml',
+      brand:'Chicco',
+      qty:1
+
+    },
+    {
+        id: '5',
+        productUrl:
+          'https://images.mamaearth.in/catalog/product/d/n/dnbw-1_hfoavdvwmgs9qmxd_white_bg.jpg?fit=contain&height=600',
+        productName: 'Deeply Nourishing Body Wash',
+        productPrice: '4139',
+        actualPrice: '4599',
+        discount: '-10%',
+        brand:'Mamaearth',
+        size:'500ml',
+      qty:1
+
+      },
+      {
+        id: '6',
+        productUrl: 'https://m.media-amazon.com/images/I/51bbFLQbsBL.jpg',
+        productName: 'All We Know Baby Bubble Bath ',
+        productPrice: '379',
+        actualPrice: '459',
+        discount: '-5%',
+        brand:'Mamaearth',
+        size:'200ml',
+        qty:1
+
+      },
+      {
+        id: '7',
+        productUrl:
+          'https://www.chicco.in/dw/image/v2/BGMM_PRD/on/demandware.static/-/Sites-chicco-master/default/dwe073c429/combo/grpcd042.png?sw=800&sh=800&sm=fit',
+        productName: 'Deeply Nourishing Chicco Body Wash',
+        productPrice: '4139',
+        actualPrice: '4599',
+        discount: '-10%',
+        brand:'Chicco',
+        size:'500ml',
+      qty:1
+
+      },
+      {
+        id: '8',
+        productUrl:
+          'https://www.jiomart.com/images/product/original/491334908/chicco-baby-moments-no-tears-shampoo-500-ml-product-images-o491334908-p590106051-0-202203150239.jpg?im=Resize=(1000,1000)',
+        productName: 'Chicco Baby Moments no-tears Shampoo',
+        productPrice: '499',
+        actualPrice: '599',
+        discount: '-5%',
+        brand:'Chicco',
+        size:'500ml',
+      qty:1
+
+      },
+  ];
+  console.log('selectedProduct : ', productData);
+  const {user} = useAuth()
   const onReviewNav = () => {
     navigation.navigate('Review');
   };
@@ -40,18 +144,19 @@ const ProductDetailScreen = ({route, navigation}: any) => {
     navigation.navigate('Cart');
   };
   const addToCart = async (item: ProductDetailsType) => {
-    const userData = await AsyncStorage.getItem('UserData');
+    const userDetails = user
+    const userData = userDetails?.userData
     if (!userData) {
       Alert.alert('You need to login yourself first!');
       return false;
     }
 
     console.log('user:', userData);
-    const userDataObj = JSON.parse(userData);
+    // const userDataObj = JSON.parse(userData);
 
     let docRef = firestore()
       .collection('cartProducts')
-      .doc(userDataObj.userData.uid);
+      .doc(userData.uid);
 
     docRef.get().then(res => {
       if (res.exists) {
@@ -69,33 +174,35 @@ const ProductDetailScreen = ({route, navigation}: any) => {
 
           firestore()
             .collection('cartProducts')
-            .doc(userDataObj.userData.uid)
+            .doc(userData.uid)
             .update(updatedData); //.update will take object or specific key's object value
         } else {
           Alert.alert('This product is already added in cart!');
         }
       } else {
         const productDetails = {
-          _id: userDataObj.userData.uid,
+          _id: userData.uid,
           productData: [item],
         };
         console.log('new data created');
 
         setDoc(
-          doc(db, 'cartProducts', userDataObj.userData.uid),
+          doc(db, 'cartProducts', userData.uid),
           productDetails,
         );
       }
     });
   };
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white dark:bg-zinc-900">
       <Header
         title="Product Details"
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon height={25} width={25}  />
         }
-        rightIcon1={<CartIcon height={20} width={20} onPress={onCartPress} />}
+        onBackPress={onBackPress}
+        rightIcon1={<CartIcon height={20} width={20}/>}
+        onPressRightIcon={onCartPress}
       />
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -109,8 +216,8 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </TouchableOpacity>
         </View>
 
-        <View className="h-64 mt-0 border-b-2 border-lightergray">
-          <Swiper activeDotColor="#E4097D">
+        <View className="h-64 mt-0 border-b border-lightergray">
+          <Swiper activeDotColor="#E4097D" className='bg-white'>
             <View className="flex-1">
               <Image
                 className="flex-1"
@@ -141,10 +248,10 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </Swiper>
         </View>
 
-        <View className="my-2.5 border-b-2 border-lightergray">
+        <View className="my-2.5 border-b border-lightergray ">
           <View className="mx-5">
             <View className="flex-row justify-between items-start">
-              <Text className="text-xl w-[250px] font-normal text-black">
+              <Text className="text-xl w-['40%'] font-normal text-black dark:text-zinc-400">
                 {productData.productSelected.productName}
               </Text>
               <Image
@@ -159,11 +266,11 @@ const ProductDetailScreen = ({route, navigation}: any) => {
 
             <Star size={15} gap={1} value={3} />
             <View className="my-1.5 pb-2.5 flex-row items-center">
-              <Text className="text-xl font-bold text-primary">
-                {productData.productSelected.productPrice}{' '}
+              <Text className="text-xl font-bold text-primary dark:text-pink-500">
+                Rs. {productData.productSelected.productPrice}{' '}
               </Text>
               <Text className="line-through font-semibold text-base text-lightgray">
-                {productData.productSelected.actualPrice}{' '}
+                Rs. {productData.productSelected.actualPrice}{' '}
               </Text>
               <Text className="text-blue text-xl font-extrabold">
                 {' '}
@@ -173,14 +280,14 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-2.5 border-b-2 border-lightergray">
+        <View className="my-2.5 border-b border-lightergray">
           <View className="mx-5">
-            <Text className="text-xl font-semibold text-darkgray">Size</Text>
+            <Text className="text-xl font-semibold text-darkgray dark:text-white">Size</Text>
             <View className="my-2.5 flex-row gap-x-2.5">
               <TouchableOpacity className="border-darkgray border-2 rounded-lg h-7 items-center px-[15px] justify-center">
-                <Text className="text-black font-semibold text-base">50ml</Text>
+                <Text className="text-black font-semibold text-base dark:text-zinc-500">50ml</Text>
               </TouchableOpacity>
-              <TouchableOpacity className="border-lightblue border-2 rounded-lg h-7 items-center px-2.5 justify-center">
+              <TouchableOpacity className="border-lightblue dark:border-sky-600 border-2 rounded-lg h-7 items-center px-2.5 justify-center">
                 <Text className="text-blue font-normal text-base">250ml</Text>
               </TouchableOpacity>
               <TouchableOpacity className="border-[#bbbbbb] border-2 rounded-lg h-7 items-center px-2.5 justify-center">
@@ -189,7 +296,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text className="my-1.5 text-xl font-semibold text-darkgray">
+            <Text className="my-1.5 text-xl font-semibold text-darkgray dark:text-white">
               Color
             </Text>
             <View className="flex-row my-1.5 gap-x-[15px]">
@@ -202,13 +309,13 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-2.5 border-b-2 border-lightergray">
+        <View className="my-2.5 border-b border-lightergray">
           <View className="mx-5">
             <View className="flex-row items-center my-1.5 justify-between">
-              <Text className="text-xl font-semibold text-black">
+              <Text className="text-xl font-semibold text-black dark:text-white">
                 Description / Specification
               </Text>
-              <Text className="text-sm font-extrabold text-primary">
+              <Text className="text-sm font-extrabold text-primary dark:text-pink-500">
                 - Less
               </Text>
             </View>
@@ -232,10 +339,10 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-1.5 border-b-2 border-lightergray">
+        <View className="my-1.5 border-b border-lightergray">
           <View className="mx-5">
             <View className="my-1.5">
-              <Text className="text-xl font-semibold text-black">
+              <Text className="text-xl font-semibold text-black dark:text-white">
                 Delivery & Return Policy
               </Text>
             </View>
@@ -249,16 +356,20 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-1.5 border-b-2 border-lightergray">
+        <View className="my-1.5 border-b border-lightergray">
           <View className="mx-5">
             <View className="flex-row items-center justify-between">
-              <Text className="text-black text-xl font-semibold">Reviews</Text>
+              <Text className="text-black dark:text-white text-xl font-semibold">Reviews</Text>
+              <TouchableOpacity 
+                onPress={onReviewNav}
+                >
               <ForwardButtonIcon
                 height={18}
                 width={18}
                 fill={'#BFBFBF'}
-                onPress={onReviewNav}
               />
+              </TouchableOpacity>
+              
             </View>
 
             <View className="my-2.5 flex-row gap-x-2.5">
@@ -266,7 +377,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
                 <Text className="text-primary text-3xl font-semibold">M</Text>
               </View>
               <View>
-                <Text className="text-base font-bold text-[#575757] mb-1.5">
+                <Text className="text-base font-bold text-[#575757] dark:text-zinc-300 mb-1.5">
                   Mark Johnson
                 </Text>
                 <Star size={15} gap={2} value={3} />
@@ -279,7 +390,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-2.5 border-b-2 border-lightergray">
+        <View className="my-2.5 border-b border-lightergray">
           <View className="mx-5">
             <View className="my-2.5 flex-row gap-x-2.5">
               <View className="rounded-full border-[transparent] border w-[50px] h-[50px] items-center justify-center">
@@ -292,7 +403,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
                 />
               </View>
               <View>
-                <Text className="text-base font-bold text-[#575757] mb-1.5">
+                <Text className="text-base font-bold text-[#575757] dark:text-zinc-300 mb-1.5">
                   Mark Johnson
                 </Text>
                 <Star size={15} gap={2} value={3} />
@@ -305,31 +416,30 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           </View>
         </View>
 
-        <View className="my-2.5 border-b-2 border-lightergray">
+        <View className="my-2.5 border-b border-lightergray">
           <View className="mx-5">
             <View className="flex-row items-center justify-between">
-              <Text className="text-black text-xl font-semibold">
+              <Text className="text-black dark:text-white text-xl font-semibold">
                 Question & Answer
               </Text>
               <TouchableOpacity
                 className="flex-row items-center gap-x-[15px]"
                 onPress={onQuePress}>
-                <Text className="text-primary text-sm font-extrabold">
+                <Text className="text-primary dark:text-pink-500 text-sm font-extrabold">
                   Ask Question?
                 </Text>
                 <ForwardButtonIcon
                   height={18}
                   width={18}
                   fill={'#BFBFBF'}
-                  onPress={onQuePress}
                 />
               </TouchableOpacity>
             </View>
-            <View className="my-2.5 border-b-2 border-lightergray pb-2.5">
+            <View className="my-2.5 border-b border-lightergray pb-2.5">
               <Text className="font-semibold text-[#b7b7b7]">
                 1) This body nourishing is safe for 4 month old baby?
               </Text>
-              <Text className="font-extrabold text-[#424242]">
+              <Text className="font-extrabold text-[#424242] dark:text-white">
                 A. Yes ,this is very safe.
               </Text>
             </View>
@@ -337,7 +447,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
               <Text className="font-semibold text-[#b7b7b7]">
                 2) This body nourishing is safe for 4 month old baby?
               </Text>
-              <Text className="font-extrabold text-[#424242]">
+              <Text className="font-extrabold text-[#424242] dark:text-white">
                 A. Yes ,this is very safe.
               </Text>
             </View>
@@ -346,11 +456,11 @@ const ProductDetailScreen = ({route, navigation}: any) => {
 
         <View className="my-1.5">
           <View className="mx-5">
-            <Text className="text-#ea59a0 text-lg font-semibold">
+            <Text className="text-#ea59a0 dark:text-white text-lg font-semibold">
               Similar Products
             </Text>
             <View className="my-2.5 flex-row gap-x-2.5">
-              <ProductCard productData={productData} horizontal />
+              <ProductCard productData={suggestedProducts} horizontal />
             </View>
           </View>
         </View>

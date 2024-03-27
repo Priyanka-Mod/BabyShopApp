@@ -10,12 +10,14 @@ const AskQueScreen = ({navigation}: any) => {
     navigation.navigate('QueAns');
   };
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="Ask Question"
         iconLeft={
-          <BackWhiteArrowIcon width={25} height={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon width={25} height={25}  />
+
         }
+        onBackPress={onBackPress}
       />
       <View className='my-2.5 mx-5'>
         <View className='mt-2.5'>

@@ -14,7 +14,7 @@ const VerifyMobileScreen = (props:any) => {
     props.navigation.navigate('LogIn');
   }
   return (
-    <Layout>
+    <View className='flex-1 px-5 bg-white'>
       <Header
       auth
         onBackPress={onBackPress}
@@ -48,7 +48,7 @@ const VerifyMobileScreen = (props:any) => {
           </TouchableOpacity>
         </View>
       </View>
-    </Layout>
+    </View>
   );
 };
 

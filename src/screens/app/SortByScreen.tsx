@@ -1,9 +1,10 @@
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 import React, {useCallback, useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Colors} from '../../utils';
 import {Header} from '../../components';
 import {BackWhiteArrowIcon} from '../../assets/icon';
+import { CheckBox } from '../../components/CheckBox';
 
 const SortByScreen = ({navigation}: any) => {
   const [sortData,setSortData] = useState([
@@ -27,12 +28,13 @@ const SortByScreen = ({navigation}: any) => {
     setSortData(newData)
 },[sortData])
   return (
-    <View className='flex-1'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="Sort By"
         iconLeft={
-          <BackWhiteArrowIcon width={25} height={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon width={25} height={25}/>
         }
+        onBackPress={onBackPress}
       />
       <FlatList
         data={sortData}
@@ -52,29 +54,25 @@ const SortByScreen = ({navigation}: any) => {
                   }
                 }>
                 <CheckBox
-                  disabled={false}
-                  value={item.checked}
-                  tintColors={{
-                    true: Colors.primary,
-                    false: '#e2e2e2',
-                  }}
+                  check={item.checked}
                   onValueChange={() => 
                     onCheckPressed(index,item.checked)
                   }
+                  label={item.name}
+                  customLabelStyle={'text-black dark:text-zinc-400 text-xl font-normal'}
                 />
-                <Text className='text-black text-xl font-normal'>{item.name}</Text>
               </TouchableOpacity>
             </View>
           );
         }}
       />
 
-      <View className='flex-row items-center px-3 rounded-t-3xl border-[#e2e2e2] border-2 h-[50px] absolute bottom-0 w-full' >
+      <View className='flex-row items-center px-3 rounded-t-3xl border-[#e2e2e2] dark:border-zinc-700 border-2 h-[50px] absolute bottom-0 w-full' >
         <TouchableOpacity className='w-2/4 border-[#e2e2e2] border-r-2 items-center'>
-          <Text className='text-[17px] font-extrabold'>CLEAR ALL</Text>
+          <Text className='text-[17px] font-extrabold text-[#8E8E8E] dark:text-white'>CLEAR ALL</Text>
         </TouchableOpacity>
         <TouchableOpacity className='w-2/4 items-center'>
-          <Text className='text-[17px] font-black text-primary text-center'>APPLY</Text>
+          <Text className='text-[17px] font-black text-primary dark:text-pink-500 text-center'>APPLY</Text>
         </TouchableOpacity>
       </View>
     </View>

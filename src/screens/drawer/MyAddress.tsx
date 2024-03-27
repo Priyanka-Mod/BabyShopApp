@@ -50,20 +50,20 @@ const MyAddress = ({navigation}: any) => {
     [addressData],
   );
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="My Address"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('Account')}
           />
         }
+        onBackPress={() => navigation.navigate("Account")}
       />
       <TouchableOpacity
         onPress={() => navigation.navigate('Add Address')}
-        className='bg-lightpink flex-row gap-2.5 py-2.5 pt-0 mt-0 items-center justify-center'>
+        className='bg-lightpink dark:bg-zinc-600 flex-row gap-2.5 py-2.5 pt-0 mt-0 items-center justify-center'>
         <PlusIcon height={25} width={25} />
         <Text className='text-base font-bold text-primary'>
           ADD A NEW ADDRESS
@@ -76,13 +76,13 @@ const MyAddress = ({navigation}: any) => {
             <View className='py-2.5 px-5'>
               <View className='flex-row items-center justify-between'>
                 <View className='flex-row gap-1.5 items-center'>
-                  <Text className='text-base text-primary font-semibold'>
+                  <Text className='text-base text-primary dark:text-white font-semibold'>
                     {item.name}
                   </Text>
                   {item.home ? (
-                    <View className='flex-row justify-center items-center bg-white border-lightblue border-2 rounded-full px-2.5'
+                    <View className='flex-row justify-center items-center border-lightblue border-2 rounded-full px-2.5'
                       >
-                      <Text className='text-center text-blue font-semibold text-[11px]'
+                      <Text className='text-center text-blue dark:text-lightblue font-semibold text-[11px]'
                         >
                         Home
                       </Text>
@@ -120,20 +120,20 @@ const MyAddress = ({navigation}: any) => {
                 </TouchableOpacity>
               </View>
               <View>
-                <Text className='w-[85%] text-[15px] font-medium text-darkgray'
+                <Text className='w-[85%] text-[15px] font-medium text-darkgray dark:text-zinc-400'
                   >
                   {item.address}
                 </Text>
                 <Text className='color-lightgray text-[15px] font-medium'>
                   Mobile :{' '}
-                  <Text className='text-base font-semibold color-darkgray'
+                  <Text className='text-base font-semibold color-darkgray dark:text-white'
                     >
                     +91 {item.mobile}
                   </Text>
                 </Text>
                 <Text className='color-lightgray text-[15px] font-medium'>
                   Email :{' '}
-                  <Text className='text-base font-semibold color-darkgray'
+                  <Text className='text-base font-semibold color-darkgray dark:text-white'
                     >
                     {item.email}
                   </Text>

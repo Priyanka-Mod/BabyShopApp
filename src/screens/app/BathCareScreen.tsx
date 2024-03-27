@@ -3,6 +3,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Header, ProductCard} from '../../components';
 import {BackArrowIcon, BackWhiteArrowIcon, CartIcon} from '../../assets/icon';
 import {Colors} from '../../utils';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const BathCareScreen = ({navigation}: any) => {
   const bathSkinCareProducts = [
@@ -122,16 +123,18 @@ const BathCareScreen = ({navigation}: any) => {
     navigation.navigate("Cart")
   }
   return (
-    <View className='bg-[#f9f9f9] flex-1'>
+    <View className='bg-[#f9f9f9] dark:bg-zinc-900 flex-1'>
       <Header
         title="Bath & Skin Care "
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon height={25} width={25}  />
         }
-        rightIcon1={<CartIcon height={20} width={20} onPress={onCartPress}/>}
+        onBackPress={onBackPress}
+        rightIcon1={<CartIcon height={20} width={20} />}
+        onPressRightIcon={onCartPress}
       />
-      <View className='bg-white flex-row items-center py-1.5 mt-5 w-[350px] self-center rounded-full justify-center
-      border-[#f2f2f2] border-2'>        
+      <View className='bg-white dark:bg-zinc-800 flex-row items-center py-1.5 mt-5 w-[350px] self-center rounded-full justify-center
+      border-[#f2f2f2] dark:border-zinc-700 border-2'>        
         <TouchableOpacity className='pl-0 border-[#f2f2f2] border-r-2 w-[50%] flex-row items-center justify-center gap-x-5 self-center'
          
           onPress={onSortBy}
@@ -141,7 +144,7 @@ const BathCareScreen = ({navigation}: any) => {
             style={styles.logoStyle}
             className='h-5 w-5'
           />
-          <Text className='font-medium text-xl text-[#404040]'>
+          <Text className='font-medium text-xl text-[#404040] dark:text-zinc-300'>
             Sort By
           </Text>
         </TouchableOpacity>
@@ -154,12 +157,11 @@ const BathCareScreen = ({navigation}: any) => {
             style={styles.logoStyle}
             className='h-5 w-5'
           />
-          <Text className='font-medium text-xl text-[#404040]'>
+          <Text className='font-medium text-xl text-[#404040] dark:text-zinc-300'>
             Filter
           </Text>
         </TouchableOpacity>
       </View>
-
       <View className='my-2.5 mb-[150px] items-center'>
         <ProductCard productData={bathSkinCareProducts} addToCart/>
       </View>

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 // import { createDrawerNavigator } from '@react-navigation/drawer';
 import { StatusBar, StyleSheet, View } from "react-native";
@@ -18,13 +18,21 @@ import CheckoutScreen from "../screens/app/CheckoutScreen";
 import DrawerNavigation from "./DrawerNavigation";
 import OrderPlacedScreen from "../screens/app/OrderPlacedScreen";
 import Cart from "../screens/app/Cart";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useColorScheme } from "nativewind";
+import {Appearance} from 'react-native';
+import { darkTheme, lightTheme } from "../../constants";
 
 const Stack = createNativeStackNavigator()
 // const Drawer = createDrawerNavigator();
 const AppNavigation = () => {
+//   const { colorScheme, toggleColorScheme } = useColorScheme();
+    const insets = useSafeAreaInsets();
+    
     return(
-        <View className="flex-1">
-            <StatusBar backgroundColor={Colors.primary}
+        <Fragment>
+        <SafeAreaView className="flex-1 bg-primary">
+            <StatusBar backgroundColor='#E4097D'
                   barStyle='light-content'/>
             <Stack.Navigator screenOptions={{
             headerShown:false
@@ -45,8 +53,9 @@ const AppNavigation = () => {
             
         
         </Stack.Navigator>
-        </View>
-
+        </SafeAreaView>
+        <View style={{position:'absolute',bottom:0,backgroundColor:'black',height:insets.bottom, width:'100%'}}/>
+        </Fragment>
 
         // <Drawer.Navigator>
         //     <Drawer.Screen name="Dashboard" component={HomeScreen}/>

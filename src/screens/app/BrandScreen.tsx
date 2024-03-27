@@ -49,12 +49,13 @@ const BrandScreen = ({navigation}: any) => {
 
   ]
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="Brands"
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25} onPress={onBackPress} />
+          <BackWhiteArrowIcon height={25} width={25}  />
         }
+        onBackPress={onBackPress}
       />
 
       <View className='mt-0 h-[210px]'>
@@ -63,7 +64,7 @@ const BrandScreen = ({navigation}: any) => {
             <Image
              className='flex-1'
               source={{
-                uri: 'https://scontent-bom1-2.xx.fbcdn.net/v/t1.6435-9/59697289_2286407284758210_1163771146047324160_n.jpg?stp=dst-jpg_p526x296&_nc_cat=108&ccb=1-7&_nc_sid=7f8c78&_nc_ohc=UpRG6emNjXsAX-6n7UJ&_nc_ht=scontent-bom1-2.xx&oh=00_AfClAISNkHTSUhfvCR4cO3oB4rqRE0pSHecRTx6KtseMQg&oe=65F695B9',
+                uri: 'https://5.imimg.com/data5/SELLER/Default/2021/1/KD/AA/SH/120386859/baby-care-kit-500x500.jpg',
               }}
             />
           </View>

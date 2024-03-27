@@ -48,10 +48,12 @@ const MyOrderScreen = ({navigation}:any) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   return (
-    <View className='flex-1 bg-white'>
+    <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="My Order"
-        iconLeft={<BackWhiteArrowIcon height={25} width={25} onPress={()=>navigation.navigate('Account')}/>}
+        iconLeft={<BackWhiteArrowIcon height={25} width={25}/>}
+        onBackPress={() => navigation.navigate('Account')}
+
       />
       <View className='mt-5 mx-5'>
         <Input
@@ -98,14 +100,14 @@ const MyOrderScreen = ({navigation}:any) => {
           renderItem={({item}) => {
             return (
               <View>
-                <View className='bg-lightpink py-5'>
-                  <Text className='text-primary pl-5'>
+                <View className='bg-lightpink dark:bg-zinc-700 py-5'>
+                  <Text className='text-primary dark:text-white pl-5'>
                     {item.orderDate}
                   </Text>
                 </View>
                 <TouchableOpacity onPress={() =>navigation.navigate('OrderDetails')}>
                 <View className='my-2.5 mx-5'>
-                  <Text className='text-darkgray text-base font-bold'>
+                  <Text className='text-darkgray dark:text-zinc-400 text-base font-bold'>
                     Order ID#{item.id}
                   </Text>
                   <View className='my-2.5 pt-2.5 flex-row items-start gap-5'>
@@ -119,7 +121,7 @@ const MyOrderScreen = ({navigation}:any) => {
                       />
                     </View>
                     <View>
-                      <Text className='text-base font-medium text-black'>
+                      <Text className='text-base font-medium text-black dark:text-white'>
                         {item.productName}
                       </Text>
                       <Text

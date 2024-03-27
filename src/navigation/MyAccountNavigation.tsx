@@ -10,27 +10,29 @@ import OrderDetails from "../screens/drawer/OrderDetails";
 import Review from "../screens/drawer/Review";
 import MyAccountScreen from "../screens/drawer/MyAccountScreen";
 import Notification from "../screens/drawer/Notification";
+import EditChildDetails from "../screens/drawer/EditChildDetails";
 
 const Stack = createNativeStackNavigator();
 
 const MyAccountNavigation = () => {
-    return(
-      
-            <Stack.Navigator screenOptions={{
-            headerShown:false
-        }} initialRouteName="Account">
-      <Stack.Screen name='Account' component={MyAccountScreen}/>
-      <Stack.Screen name='MyOrder' component={MyOrderScreen}/>
-      <Stack.Screen name='MyAddress' component={MyAddress}/>
-      <Stack.Screen name='MyProfile' component={MyProfile}/>
-      <Stack.Screen name='ChildDetails' component={MyChildDetails}/>
-      <Stack.Screen name='Add Address' component={AddAddress}/>
-      <Stack.Screen name='OrderDetails' component={OrderDetails}/>
-      <Stack.Screen name='Review' component={Review}/>
-      <Stack.Screen name="Notification" component={Notification}/>
-      
-      </Stack.Navigator>
-        
-    )
+  return (
+
+    <Stack.Navigator screenOptions={{
+      headerShown: false
+    }} initialRouteName="Account">
+      <Stack.Screen name='Account' component={MyAccountScreen} />
+      <Stack.Screen name='MyOrder' component={MyOrderScreen} />
+      <Stack.Screen name='MyAddress' component={MyAddress} />
+      <Stack.Screen name='MyProfile' component={MyProfile} />
+      <Stack.Screen name='ChildDetails' component={MyChildDetails} />
+      <Stack.Screen name='Add Address' component={AddAddress} />
+      <Stack.Screen name='OrderDetails' component={OrderDetails} />
+      <Stack.Screen name='Review' component={Review} />
+      {/* <Stack.Screen name="Notification" component={Notification} /> */}
+      <Stack.Screen name="EditChild" component={EditChildDetails} />
+      <Stack.Screen name='Notification' component={Notification}/>
+    </Stack.Navigator>
+
+  )
 }
 export default MyAccountNavigation

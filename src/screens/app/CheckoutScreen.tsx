@@ -16,10 +16,12 @@ import {
 } from '../../assets/icon';
 import {Colors} from '../../utils';
 import {Dropdown} from 'react-native-element-dropdown';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 import {ProductDetailsType} from '../../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
+import { useAuth } from '../../services/useContextService';
+import { CheckBox } from '../../components/CheckBox';
 
 const CheckoutScreen = ({route, navigation}: any) => {
   const {total, discount} = route.params;
@@ -28,13 +30,13 @@ const CheckoutScreen = ({route, navigation}: any) => {
   const [productCartData, setProductData] = useState<ProductDetailsType[]>();
   const [totalPrice , setTotalPrice] = useState(total)
   const [discountPrice , setDiscountPrice] = useState(discount)
+  const {user} = useAuth()
   useEffect(() => {
-    (async () => {
-      try {
         // Alert.alert('useEffect Called!')
-        const userData = await AsyncStorage.getItem('UserData');
-        const userDataObj = JSON.parse(userData as string);
-        setId(userDataObj.userData.uid);
+        const userDetails = user
+    const userData = userDetails?.userData
+        // const userDataObj = JSON.parse(userData as string);
+        setId(userData.uid);
         let docRef = firestore().collection('cartProducts').doc(Id);
 
         docRef.get().then(res => {
@@ -45,13 +47,11 @@ const CheckoutScreen = ({route, navigation}: any) => {
             setProductData(productData);
           }
         });
-      } catch (err) {
-        console.log('error :', err);
-      }
-    })();
   }, [Id]);
   const [check, setCheck] = useState(false);
-  const [paycheck, setPaycheck] = useState({cod: false, online: false});
+  // const [paycheck, setPaycheck] = useState({cod: false, online: false});
+  const [cod , setCOD] =useState(false)
+  const [online , setOnline] = useState(false)
   const updateQty = (index: number, qty: string) => {
     // let updatedProduct = [...productData]
     if (productCartData) {
@@ -78,53 +78,53 @@ const CheckoutScreen = ({route, navigation}: any) => {
   };
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white  dark:bg-zinc-900">
       <Header
         title="Checkout"
         iconLeft={
           <BackWhiteArrowIcon
             height={25}
             width={25}
-            onPress={() => navigation.navigate('Cart')}
           />
         }
+        onBackPress={() => navigation.navigate('Cart')}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:50}}>
         <View className="my-2.5 border-b-2 border-lightergray pb-5">
           <View className="mx-5">
             <View className="flex-row gap-2.5 items-center">
-              <Text className="text-lg font-medium text-darkgray">
+              <Text className="text-lg font-medium text-darkgray dark:text-white">
                 MARK JOHNSON
               </Text>
               <View className="items-center">
                 <View className="flex-row justify-center items-center border-lightblue border-2 rounded-full px-2.5">
-                  <Text className="text-center text-blue font-semibold text-[11px]">
+                  <Text className="text-center text-blue  dark:text-lightblue font-semibold text-[11px]">
                     Home
                   </Text>
                 </View>
               </View>
             </View>
             <View className="my-2.5">
-              <Text className="w-[85%] text-[15px] font-semibold text-darkgray">
+              <Text className="w-[85%] text-[15px] font-semibold text-darkgray dark:text-zinc-200">
                 401, Cosmo Complex, Mahila Collage Circle, Kalawad Rd, Rajkot,
                 Gujarat 36001
               </Text>
-              <Text className="text-[15px] text-lightgray font-normal my-1">
+              <Text className="text-[15px] text-lightgray dark:text-zinc-200 font-normal my-1">
                 Mobile :{' '}
-                <Text className="text-base font-semibold text-darkgray">
+                <Text className="text-base font-semibold text-darkgray dark:text-zinc-400">
                   +91 12345 67890
                 </Text>
               </Text>
-              <Text className="text-[15px] text-lightgray font-normal my-1">
+              <Text className="text-[15px] text-lightgray dark:text-zinc-200 font-normal my-1">
                 Email :{' '}
-                <Text className="text-base font-semibold text-darkgray">
+                <Text className="text-base font-semibold text-darkgray dark:text-zinc-400">
                   mark1998@gmail.com
                 </Text>
               </Text>
             </View>
 
-            <TouchableOpacity className="bg-white border-primary border-2 rounded-lg h-[38px] justify-center">
-              <Text className="text-center text-primary font-bold text-base">
+            <TouchableOpacity className="bg-white dark:bg-zinc-600 border-primary  dark:border-zinc-800 border-2 rounded-lg h-[38px] justify-center">
+              <Text className="text-center text-primary  dark:text-white font-bold text-base">
                 CHANGE
               </Text>
             </TouchableOpacity>
@@ -134,37 +134,37 @@ const CheckoutScreen = ({route, navigation}: any) => {
           data={productCartData}
           renderItem={({item,index}) => {
             return (
-              <View className="mb-2.5 border-b-2 border-lightergray pb-2.5">
-                <View className="mx-5">
+              <View className="mb-2.5 border-b border-zinc-200 pb-2.5">
+                <View className="mx-4">
                   <View className="flex-row items-start justify-between">
-                    <View className="py-2.5">
-                      <Text className="text-black text-[15px] font-semibold mb-1.5 w-[280px]">
+                    <View className="py-2.5 w-[70%]">
+                      <Text className="text-black dark:text-zinc-200 text-[15px] font-semibold mb-1.5">
                         {item.productName}
                       </Text>
-                      <Text className="text-[15px] text-lightgray font-normal">
+                      <Text className="text-[15px] text-lightgray  dark:text-zinc-200 font-normal">
                         Brand :{' '}
-                        <Text className="text-[15px] font-semibold text-darkgray">
+                        <Text className="text-[15px] font-semibold text-darkgray  dark:text-white">
                           {item.brand}
                         </Text>
                       </Text>
-                      <Text className="text-[15px] text-lightgray font-normal">
+                      <Text className="text-[15px] text-lightgray dark:text-zinc-200 font-normal">
                         Size :{' '}
-                        <Text className="text-[15px] font-semibold text-darkgray">
+                        <Text className="text-[15px] font-semibold text-darkgray  dark:text-white">
                           {item.size}
                         </Text>
                       </Text>
-                      <Text className="text-[15px] text-lightgray font-normal">
+                      <Text className="text-[15px] text-lightgray dark:text-zinc-200 font-normal">
                         Color :{' '}
-                        <Text className="text-[15px] font-semibold text-darkgray">
+                        <Text className="text-[15px] font-semibold text-darkgray dark:text-white">
                           White
                         </Text>
                       </Text>
-                      <Text className="text-primary text-sm font-extrabold py-1">
+                      <Text className="text-primary dark:text-pink-500 text-sm font-extrabold py-1">
                       
                         Rs. {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
                         <Text className="text-lightgray text-xs line-through">
                           {' '}
-                          {Number(item.actualPrice).toLocaleString('en-US')}.00
+                          Rs. {Number(item.actualPrice).toLocaleString('en-US')}.00
                         </Text>
                       </Text>
                     </View>
@@ -180,7 +180,8 @@ const CheckoutScreen = ({route, navigation}: any) => {
                         />
                       </View>
                       <Dropdown
-                      
+                      placeholderStyle = {{color:"#999999"}}
+                      selectedTextStyle={{color:"#999999"}}
                         style={{
                           borderColor: '#9ED4EE',
                           borderWidth: 2,
@@ -212,17 +213,13 @@ const CheckoutScreen = ({route, navigation}: any) => {
               className="flex-row items-center gap-x-1.5"
               onPress={() => setCheck(!check)}>
               <CheckBox
-                disabled={false}
-                value={check}
-                tintColors={{
-                  true: Colors.primary,
-                  false: '#e2e2e2',
-                }}
+                check={check}
                 onValueChange={() => setCheck(!check)}
+                label='Use wallet'
+                customLabelStyle="text-black  dark:text-white text-lg font-bold"
               />
-              <Text className="text-black text-lg font-bold">Use wallet</Text>
             </TouchableOpacity>
-            <Text className="pb-1.5 text-xs font-semibold text-lightgray pl-1">
+            <Text className="pb-1 text-xs font-semibold text-lightgray dark:text-zinc-200 pl-1">
               Available balance Rs. 1000/-
             </Text>
           </View>
@@ -235,43 +232,27 @@ const CheckoutScreen = ({route, navigation}: any) => {
             <View className="flex-row items-center gap-x-7">
               <TouchableOpacity
                 className="flex-row items-center gap-x-1.5"
-                onPress={() =>
-                  setPaycheck(prev => ({...prev, cod: !paycheck.cod}))
-                }>
+                onPress={() =>setCOD(!cod)}
+              >
                 <CheckBox
-                  disabled={false}
-                  value={paycheck.cod}
-                  tintColors={{
-                    true: Colors.primary,
-                    false: '#e2e2e2',
-                  }}
-                  onValueChange={value =>
-                    setPaycheck(prev => ({...prev, cod: value}))
-                  }
+                  check={cod}
+                onValueChange={() => setCOD(!cod)}
+                label='Cash On Delivery'
+                customLabelStyle="text-black  dark:text-white text-sm font-semibold"
                 />
-                <Text className="text-black text-sm font-semibold">
-                  Cash On Delivery
-                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-row items-center gap-x-1.5"
                 onPress={() =>
-                  setPaycheck(prev => ({...prev, online: !paycheck.online}))
+                  setOnline(!online)
                 }>
                 <CheckBox
-                  disabled={false}
-                  value={paycheck.online}
-                  tintColors={{
-                    true: Colors.primary,
-                    false: '#e2e2e2',
-                  }}
-                  onValueChange={value =>
-                    setPaycheck(prev => ({...prev, online: value}))
+                  check={online}
+                  onValueChange={() => setOnline(!online)
                   }
+                  label='Online Payment'
+                  customLabelStyle = "text-black  dark:text-white text-sm font-semibold"
                 />
-                <Text className="text-black text-sm font-semibold">
-                  Online Payment
-                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -282,22 +263,22 @@ const CheckoutScreen = ({route, navigation}: any) => {
           </Text>
           <View className="flex-row items-center justify-between">
             <View>
-              <Text className="text-base font-semibold">Total price</Text>
-              <Text className="text-base font-semibold">Total Discount</Text>
+              <Text className="text-base text-zinc-700 dark:text-white font-semibold">Total price</Text>
+              <Text className="text-base text-zinc-700 dark:text-white font-semibold">Total Discount</Text>
               {/* <Text  className='text-base font-semibold'>Coupon Code Discount</Text> */}
-              <Text className="text-base font-semibold text-black">
+              <Text className="text-base  font-semibold text-black dark:text-white">
                 Grand Total
               </Text>
             </View>
             <View>
-              <Text className="text-black text-base font-semibold">
+              <Text className="text-black dark:text-white text-base font-semibold">
                 Rs.{Number(totalPrice).toLocaleString('en-US')}
               </Text>
-              <Text className="text-black text-base font-semibold self-end">
+              <Text className="text-black dark:text-white text-base font-semibold self-end">
                 -Rs.{Number(discountPrice).toLocaleString('en-US')}
               </Text>
               {/* <Text  className='text-black text-base font-semibold self-end'>-Rs.30</Text> */}
-              <Text className="text-primary text-base font-black">
+              <Text className="text-primary dark:text-pink-500 text-base font-black">
                 Rs.
                 {(Number(totalPrice) - Number(discountPrice)).toLocaleString(
                   'en-US',

@@ -12,6 +12,8 @@ import React, {
 type AuthContextType = {
     user: { [key: string]: any } | null;
     setUser: Dispatch<SetStateAction< { [key: string]: any } | null>>;
+    theme:string;
+    setTheme: Dispatch<SetStateAction<string>>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,8 +28,8 @@ function useAuth(): AuthContextType {
 
 const AuthProvider = (props: { children: ReactNode }): ReactElement => {
     const [user, setUser] = useState<{ [key: string]: any }| null>(null);
-
-    return <AuthContext.Provider {...props} value={{ user, setUser }} />;
+    const[theme,setTheme] = useState('light');
+    return <AuthContext.Provider {...props} value={{ user, setUser , theme , setTheme }} />;
 };
 
 export { AuthProvider, useAuth };

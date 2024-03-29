@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -17,10 +17,10 @@ import {
   MenuIcon,
   UserIcon,
 } from '../../assets/icon';
-import {Header, Layout, ProductCard, SecondaryButton, Star} from '../../components';
+import { Header, Layout, ProductCard, SecondaryButton, Star } from '../../components';
 
 import Swiper from 'react-native-swiper';
-import {Colors} from '../../utils';
+import { Colors } from '../../utils';
 import { DrawerActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, getDoc } from 'firebase/firestore';
@@ -28,32 +28,32 @@ import { db } from '../../services/firebaseConfig';
 import AsyncStorageService from '../../services/asyncStorageService';
 import { useAuth } from '../../services/useContextService';
 
-const HomeScreen = ({navigation}: any) => {
-  const {setUser} = useAuth();
+const HomeScreen = ({ navigation }: any) => {
+  const { setUser } = useAuth();
 
   const init = useCallback(async () => {
     const token = await AsyncStorage.getItem('token');
-    console.log('tokenLogIn=> ',token);
+    //console.log('tokenLogIn=> ', token);
     getDoc(doc(db, 'user', token!)) // getDoc to get document data from doc record having db storage named user having particular id
-    .then(async docSnap => {
-      // gives all stored data from database
-      if (docSnap.exists()) {
-        console.log('User Data:', docSnap.data());
-        // await AsyncStorage.setItem(
-        //   'UserData',
-        //   JSON.stringify(docSnap.data()),
-        // );
-        setUser(docSnap.data())
-        
-      }
-    }).catch(err => console.log(err)
-    )
-    },[])
-    
-    useEffect(() => {
-      init();
-    }, [init]);
-   
+      .then(async docSnap => {
+        // gives all stored data from database
+        if (docSnap.exists()) {
+          //console.log('User Data:', docSnap.data());
+          // await AsyncStorage.setItem(
+          //   'UserData',
+          //   JSON.stringify(docSnap.data()),
+          // );
+          setUser(docSnap.data())
+
+        }
+      }).catch(err => console.log(err)
+      )
+  }, [])
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
 
   const productData = [
     {
@@ -63,10 +63,10 @@ const HomeScreen = ({navigation}: any) => {
       productName: 'R for Rabbit Ringa Ringa Rocking Baby Walker',
       productPrice: '4139',
       actualPrice: '4599',
-      discount:'-10%',
-      fav:false,
-      brand:'Rabbit',
-      qty:1
+      discount: '-10%',
+      fav: false,
+      brand: 'Rabbit',
+      qty: 1
     },
     {
       id: '8',
@@ -75,10 +75,10 @@ const HomeScreen = ({navigation}: any) => {
       productName: 'R for Rabbit Ringa Ringa Rocking Baby Walker',
       productPrice: '4139',
       actualPrice: '4599',
-      discount:'-10%',
-      fav:false,
-      brand:'Rabbit',
-      qty:1
+      discount: '-10%',
+      fav: false,
+      brand: 'Rabbit',
+      qty: 1
 
     },
     {
@@ -88,10 +88,10 @@ const HomeScreen = ({navigation}: any) => {
       productName: 'R for Rabbit Ringa Ringa Rocking Baby Walker',
       productPrice: '4139',
       actualPrice: '4599',
-      discount:'-10%',
-      fav:false,
-      brand:'Rabbit',
-      qty:1
+      discount: '-10%',
+      fav: false,
+      brand: 'Rabbit',
+      qty: 1
 
     },
     {
@@ -101,10 +101,10 @@ const HomeScreen = ({navigation}: any) => {
       productName: 'R for Rabbit Ringa Ringa Rocking Baby Walker',
       productPrice: '4139',
       actualPrice: '4599',
-      discount:'-10%',
-      fav:false,
-      brand:'Rabbit',
-      qty:1
+      discount: '-10%',
+      fav: false,
+      brand: 'Rabbit',
+      qty: 1
 
     },
   ];
@@ -207,7 +207,7 @@ const HomeScreen = ({navigation}: any) => {
           <Swiper activeDotColor="#E4097D">
             <View className='flex-1' >
               <Image
-              className='flex-1'
+                className='flex-1'
                 source={{
                   uri: 'https://5.imimg.com/data5/SELLER/Default/2021/1/KD/AA/SH/120386859/baby-care-kit-500x500.jpg',
                 }}
@@ -215,7 +215,7 @@ const HomeScreen = ({navigation}: any) => {
             </View>
             <View className='flex-1' >
               <Image
-               className='flex-1'
+                className='flex-1'
                 source={{
                   uri: 'https://getfreedealz.com/wp-content/uploads/2024/01/Parachute-Advansed-Baby-Free-product-samples.jpg',
                 }}
@@ -263,14 +263,14 @@ const HomeScreen = ({navigation}: any) => {
             <FlatList
               numColumns={4}
               className='ml-0 my-2.5'
-              
+
               data={brands}
-              renderItem={({item}) => {
+              renderItem={({ item }) => {
                 return (
                   <View className='ml-0 my-2.5'>
                     <TouchableOpacity className='items-center' style={styles.productWrapper}>
-                      <Image className='rounded-full border border-transparent'
-                        
+                      <Image className='rounded-full border border-transparent bg-white'
+                        resizeMode='contain'
                         source={{
                           uri: item.image,
                           height: 70,
@@ -287,8 +287,8 @@ const HomeScreen = ({navigation}: any) => {
 
         <View className='my-2.5 mx-5'>
           <Text className='text-xl font-semibold text-primary dark:text-white'>Trending</Text>
-         <View className='flex-row flex-wrap justify-center'> 
-          <ProductCard productData={productData}/>
+          <View className='flex-row flex-wrap justify-center'>
+            <ProductCard productData={productData} />
           </View>
         </View>
       </>
@@ -301,22 +301,26 @@ const HomeScreen = ({navigation}: any) => {
     <View>
       <Header
         title="Dashboard"
-        iconLeft={<MenuIcon fill={'white'} height={25} width={25}/>}
-        onBackPress={() =>  navigation.dispatch(DrawerActions.toggleDrawer())}
-        rightIcon1={<CartIcon height={18} width={20} fill={'white'}  />}
+        iconLeft={<MenuIcon fill={'white'} height={25} width={25} />}
+        onBackPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+        rightIcon1={<BellIcon height={25} width={25} fill={'white'} />}
+        onPressRightIcon2={() => navigation.navigate('Notification')}
+        rightIcon2={<CartIcon height={18} width={20} fill={'white'} />}
         onPressRightIcon={onCartPress}
-        rightIcon2={<BellIcon height={25} width={25} fill={'white'} />}
-        onPressRighterIcon={() => navigation.navigate('Notification')}
+        count={2}
       />
       <View className='bg-white dark:bg-zinc-900'>
         <FlatList
-          scrollEnabled 
+          alwaysBounceHorizontal={false}
+          alwaysBounceVertical={false}
+          bounces={false}
+          scrollEnabled
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerpadding}
           numColumns={4}
           ListHeaderComponent={() => renderHeaderComponent()}
           data={catagoriesData}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <View className='ml-2 my-2.5'>
                 <TouchableOpacity className='items-center' style={styles.productWrapper} onPress={onCategoryPress}>
@@ -340,7 +344,7 @@ const HomeScreen = ({navigation}: any) => {
   );
 };
 const styles = StyleSheet.create({
-  contentContainerpadding:{paddingBottom: 100},
+  contentContainerpadding: { paddingBottom: 100 },
   productWrapper: {
     width: (Dimensions.get('window').width - 32) / 4,
   },

@@ -22,9 +22,9 @@ import { useColorScheme } from 'nativewind';
 import { darkTheme, lightTheme } from '../../../constants';
 import Animated, { LightSpeedInLeft, LightSpeedOutLeft } from 'react-native-reanimated';
 const MyAccountScreen = ({ navigation }: any) => {
-  const {theme} = useAuth();
-  const {setTheme} = useAuth();
-  const { user } = useAuth();
+  const { theme } = useAuth();
+  const { setTheme } = useAuth();
+  const { user, setUser } = useAuth();
   const [userDetails, setUserDetails] = useState<any>(user)
   const isFocused = useIsFocused();
   const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -37,7 +37,7 @@ const MyAccountScreen = ({ navigation }: any) => {
       setUserDetails(user)
     }
   }, [isFocused]);
-  console.log("profileAcc Detail : ", userDetails);
+  //console.log("profileAcc Detail : ", userDetails);
 
   // useEffect(() =>{
   //   // Alert.alert("UseEffect")
@@ -58,6 +58,7 @@ const MyAccountScreen = ({ navigation }: any) => {
   // };
 
   const logOut = async () => {
+    setUser(null)
     await auth
       .signOut()
       .then(async data => {
@@ -72,7 +73,7 @@ const MyAccountScreen = ({ navigation }: any) => {
       .catch(err => console.log(err));
   };
   return (
-    <View className="flex-1 bg-white dark:bg-black" 
+    <View className="flex-1 bg-white dark:bg-black"
     // style={{backgroundColor: currentTheme?.containerBackgroundColor}}
     >
       <Header
@@ -86,7 +87,7 @@ const MyAccountScreen = ({ navigation }: any) => {
         }
         onBackPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       />
-      {userDetails ? <View className="bg-lightpink dark:bg-zinc-800 flex-row items-center gap-5 mt-0 p-5 pt-0" 
+      {userDetails ? <View className="bg-lightpink dark:bg-zinc-800 flex-row items-center gap-5 mt-0 p-5 pt-0"
       // style={{backgroundColor:currentTheme.secondaryContainer}}
       >
         <Image
@@ -98,7 +99,7 @@ const MyAccountScreen = ({ navigation }: any) => {
           width={80}
         />
         {userDetails ? <View>
-          <Text className="text-primary dark:text-white text-lg font-bold" 
+          <Text className="text-primary dark:text-white text-lg font-bold"
           // style={{color:currentTheme.textColor}}
           >{userDetails.userData.displayName}
           </Text>
@@ -121,7 +122,7 @@ const MyAccountScreen = ({ navigation }: any) => {
         onPress={() => navigation.navigate('MyProfile')}>
         <View className="flex-row items-center gap-5">
           <PersonIcon height={20} width={20} fill={Colors.primary} />
-          <Text className="text-black dark:text-white text-base font-medium" 
+          <Text className="text-black dark:text-white text-base font-medium"
           // style={{color:currentTheme.textColor}}
           >My Profile</Text>
         </View>
@@ -133,7 +134,7 @@ const MyAccountScreen = ({ navigation }: any) => {
         onPress={() => navigation.navigate('MyOrder')}>
         <View className="flex-row items-center gap-5">
           <BoxIcon height={20} width={20} fill={Colors.primary} />
-          <Text className="text-black dark:text-white text-base font-medium" 
+          <Text className="text-black dark:text-white text-base font-medium"
           // style={{color:currentTheme.textColor}}
           >My Orders</Text>
         </View>
@@ -145,7 +146,7 @@ const MyAccountScreen = ({ navigation }: any) => {
         onPress={() => navigation.navigate('MyAddress')}>
         <View className="flex-row items-center gap-5">
           <LocationIcon height={20} width={20} fill={Colors.primary} />
-          <Text className="text-black dark:text-white text-base font-medium" 
+          <Text className="text-black dark:text-white text-base font-medium"
           // style={{color:currentTheme.textColor}}
           >My Address</Text>
         </View>
@@ -156,7 +157,7 @@ const MyAccountScreen = ({ navigation }: any) => {
         onPress={() => navigation.navigate('ChildDetails')}>
         <View className="flex-row items-center gap-5">
           <ChildIcon height={20} width={20} fill={Colors.primary} />
-          <Text className="text-black dark:text-white text-base font-medium" 
+          <Text className="text-black dark:text-white text-base font-medium"
           // style={{color:currentTheme.textColor}}
           >
             My Child Details
@@ -169,13 +170,13 @@ const MyAccountScreen = ({ navigation }: any) => {
       >
         <View className="flex-row items-center gap-5">
           <ThemeIcon height={20} width={20} fill={Colors.primary} />
-          <Text className="text-black dark:text-white text-base font-medium" 
+          <Text className="text-black dark:text-white text-base font-medium"
           // style={{color:currentTheme.textColor}}
           >
             Theme
           </Text>
         </View>
-      <Switch className='self-end' value={colorScheme === 'dark'} onChange={toggleColorScheme} trackColor={{ true: Colors.primary, false: Platform.OS=='android'?'#d3d3d3': '#fbfbfb' }} thumbColor={'white'} />
+        <Switch className='self-end' value={colorScheme === 'dark'} onChange={toggleColorScheme} trackColor={{ true: Colors.primary, false: Platform.OS == 'android' ? '#d3d3d3' : '#fbfbfb' }} thumbColor={'white'} />
       </View>
       {/* <View className='mx-5 flex-row justify-between'>
         <Text style={{color: currentTheme.textColor}}>Toggle theme context</Text>

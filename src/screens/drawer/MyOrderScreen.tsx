@@ -1,16 +1,16 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, Image, Text, View} from 'react-native';
-import {Header, Input} from '../../components';
-import {BackWhiteArrowIcon, CalendarIcon} from '../../assets/icon';
-import {Dropdown} from 'react-native-element-dropdown';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, Image, Text, View } from 'react-native';
+import { Header, Input } from '../../components';
+import { BackWhiteArrowIcon, CalendarIcon } from '../../assets/icon';
+import { Dropdown } from 'react-native-element-dropdown';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {Colors} from '../../utils';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Colors } from '../../utils';
 import moment from 'moment';
 
-const MyOrderScreen = ({navigation}:any) => {
+const MyOrderScreen = ({ navigation }: any) => {
   const [selectDate, setSelectDate] = useState(false);
-  const [orderData,setOrderData] = useState([
+  const [orderData, setOrderData] = useState([
     {
       id: '12345',
       orderDate: '2021-01-19',
@@ -51,7 +51,7 @@ const MyOrderScreen = ({navigation}:any) => {
     <View className='flex-1 bg-white dark:bg-zinc-900'>
       <Header
         title="My Order"
-        iconLeft={<BackWhiteArrowIcon height={25} width={25}/>}
+        iconLeft={<BackWhiteArrowIcon height={25} width={25} />}
         onBackPress={() => navigation.navigate('Account')}
 
       />
@@ -70,22 +70,22 @@ const MyOrderScreen = ({navigation}:any) => {
             onChange={date => {
               let birthDate = new Date(date.nativeEvent.timestamp);
               setSelectedDate(birthDate);
-              console.log("Filter data by new date");
-            console.log("selected date: ",selectedDate);
-            
+              //console.log("Filter data by new date");
+              //console.log("selected date: ",selectedDate);
 
-            const filteredData = orderData.filter((data) => {
-              console.log("data: ", data);
-              
-                const orderDate =moment(data.orderDate).toDate();
-                console.log("oderdate: ",orderDate.getFullYear(),", selectedDate: " , selectedDate.getFullYear());
-                
+
+              const filteredData = orderData.filter((data) => {
+                //console.log("data: ", data);
+
+                const orderDate = moment(data.orderDate).toDate();
+                //console.log("oderdate: ",orderDate.getFullYear(),", selectedDate: " , selectedDate.getFullYear());
+
                 return (
                   orderDate.getMonth() === selectedDate.getMonth() &&
                   orderDate.getFullYear() === selectedDate.getFullYear()
                 );
               });
-              console.log("filterdata: ",filteredData);
+              //console.log("filterdata: ",filteredData);
               setFilteredData(filteredData)
               setSelectDate(false);
             }}
@@ -94,10 +94,10 @@ const MyOrderScreen = ({navigation}:any) => {
       </View>
       <View>
         {filteredData.length ? <FlatList
-          contentContainerStyle={{paddingBottom:150}}
+          contentContainerStyle={{ paddingBottom: 150 }}
           scrollEnabled
           data={filteredData}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return (
               <View>
                 <View className='bg-lightpink dark:bg-zinc-700 py-5'>
@@ -105,43 +105,43 @@ const MyOrderScreen = ({navigation}:any) => {
                     {item.orderDate}
                   </Text>
                 </View>
-                <TouchableOpacity onPress={() =>navigation.navigate('OrderDetails')}>
-                <View className='my-2.5 mx-5'>
-                  <Text className='text-darkgray dark:text-zinc-400 text-base font-bold'>
-                    Order ID#{item.id}
-                  </Text>
-                  <View className='my-2.5 pt-2.5 flex-row items-start gap-5'>
-                    <View className='border-lightergray border-2 rounded-xl'>
-                      <Image className='rounded-xl'
-                        source={{
-                          uri: item.productImage,
-                          height: 80,
-                          width: 80,
-                        }}
-                      />
-                    </View>
-                    <View>
-                      <Text className='text-base font-medium text-black dark:text-white'>
-                        {item.productName}
-                      </Text>
-                      <Text
-                       className='
+                <TouchableOpacity onPress={() => navigation.navigate('OrderDetails')}>
+                  <View className='my-2.5 mx-5'>
+                    <Text className='text-darkgray dark:text-zinc-400 text-base font-bold'>
+                      Order ID#{item.id}
+                    </Text>
+                    <View className='my-2.5 pt-2.5 flex-row items-start gap-5'>
+                      <View className='border-lightergray border-2 rounded-xl'>
+                        <Image className='rounded-xl'
+                          source={{
+                            uri: item.productImage,
+                            height: 80,
+                            width: 80,
+                          }}
+                        />
+                      </View>
+                      <View>
+                        <Text className='text-base font-medium text-black dark:text-white'>
+                          {item.productName}
+                        </Text>
+                        <Text
+                          className='
                           text-base
                           font-extrabold
                           text-primary
                         '>
-                        {item.price}
-                      </Text>
+                          {item.price}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
                 </TouchableOpacity>
               </View>
             );
           }}
-        />:
-        <View>
-          <Text className='text-[#ff0000] self-center'>No orders found on this month of given year</Text>
+        /> :
+          <View>
+            <Text className='text-[#ff0000] self-center'>No orders found on this month of given year</Text>
 
           </View>
         }

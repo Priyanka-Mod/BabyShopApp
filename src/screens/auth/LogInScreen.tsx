@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   ImageBackground,
@@ -15,18 +15,18 @@ import {
   SecondaryButton,
   BottomButton,
 } from '../../components';
-import {LogInFormError} from '../../types';
-import {CloseEyeIcon, OpenEyeIcon, UserIcon} from '../../assets/icon';
-import {Colors} from '../../utils';
-import {CommonActions} from '@react-navigation/native';
+import { LogInFormError } from '../../types';
+import { CloseEyeIcon, OpenEyeIcon, UserIcon } from '../../assets/icon';
+import { Colors } from '../../utils';
+import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {signInWithEmailAndPassword} from 'firebase/auth';
-import {auth, db} from '../../services/firebaseConfig';
-import {doc, getDoc, loadBundle} from 'firebase/firestore';
-import {useAuth} from '../../services/useContextService';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth, db } from '../../services/firebaseConfig';
+import { doc, getDoc, loadBundle } from 'firebase/firestore';
+import { useAuth } from '../../services/useContextService';
 import AsyncStorageService from '../../services/asyncStorageService';
 
-const LogInScreen = ({navigation}: any) => {
+const LogInScreen = ({ navigation }: any) => {
   const onPressSkip = () => {
     navigation.navigate('AppStack');
   };
@@ -45,7 +45,7 @@ const LogInScreen = ({navigation}: any) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const changeUserData = (key: string, value: string) => {
-    setUserData(prev => ({...prev, [key]: value}));
+    setUserData(prev => ({ ...prev, [key]: value }));
   };
 
   const LogInUser = async () => {
@@ -74,17 +74,18 @@ const LogInScreen = ({navigation}: any) => {
 
     await signInWithEmailAndPassword(auth, userData.email, userData.password)
       .then(async userCred => {
-        // console.log(userCred);
+        // //console.log(userCred);
 
-        await AsyncStorage.setItem('token', userCred.user.uid).then(token =>
-        { console.log("tokenInLogIn" , token)
-         
+        await AsyncStorage.setItem('token', userCred.user.uid).then(token => {
+          console.log("tokenInLogIn", token)
+
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
-              routes: [{name: 'AppStack'}],
+              routes: [{ name: 'AppStack' }],
             }),
-          )}
+          )
+        }
         );
       })
       .catch(err => {

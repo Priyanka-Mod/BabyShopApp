@@ -74,10 +74,10 @@ const actions: Action[] = [
 ];
 
 const RegisterScreen = ({ navigation }: any) => {
-  const [currentIndex , setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [userData, setUserData] = useState<{
     userImage: string, name: string, email: string, number: string, password: string, childData:
-      [{ id: string, imagePath: string | undefined, childName: string, genderValue: string, birthDate: Date }]
+    [{ id: string, imagePath: string | undefined, childName: string, genderValue: string, birthDate: Date }]
   }>({
     userImage: '',
     name: '',
@@ -124,13 +124,13 @@ const RegisterScreen = ({ navigation }: any) => {
     }
   }, []);
   const onChildButtonPress = React.useCallback(
-    async (type: any, options: any,item?: any,) => {
-      console.log("ItemSelected : ",type , " " , options , ' ' , item)
+    async (type: any, options: any, item?: any,) => {
+      //console.log("ItemSelected : ",type , " " , options , ' ' , item)
       if (type === 'capture') {
         const result = await ImagePicker.launchCamera(options, setResponse);
         if (item) {
           const index = userData.childData.findIndex(it => it.id === item.id);
-          console.log('result: ', result.assets);
+          //console.log('result: ', result.assets);
           userData.childData[index].imagePath = result.assets
             ? result.assets[0].uri
             : '';
@@ -145,15 +145,15 @@ const RegisterScreen = ({ navigation }: any) => {
         );
         if (item) {
           // Alert.alert(item)
-          // console.log('itemSelected: ', index);
+          // //console.log('itemSelected: ', index);
 
           const index = userData.childData.findIndex(it => it.id === item.id);
-          console.log("result for image : " , result)
+          //console.log("result for image : " , result)
           userData.childData[index].imagePath = result.assets
             ? result.assets[0].uri
             : '';
           setChildData();
-          console.log('items: ', item);
+          //console.log('items: ', item);
         } else {
           setUri(result.assets ? result.assets[0].uri : null);
         }
@@ -223,7 +223,7 @@ const RegisterScreen = ({ navigation }: any) => {
   };
 
   const convertUri = async (uri: string, id: string) => {
-    console.log('convertURI :', uri, '  ', id);
+    //console.log('convertURI :', uri, '  ', id);
     let url = '';
     const reference = storage().ref(id); // Create a storage reference from our storage service by taking our image id to it
     await reference.putFile(uri.replace('file://', ''));
@@ -231,7 +231,7 @@ const RegisterScreen = ({ navigation }: any) => {
     await reference
       .getDownloadURL()
       .then(res => {
-        console.log('resOfConverted URL: ', res);
+        //console.log('resOfConverted URL: ', res);
         url = res;
       })
       .catch(err => console.log('error in function: ', err)); // to download url from storage for using it further in code
@@ -249,7 +249,7 @@ const RegisterScreen = ({ navigation }: any) => {
       emailValidation.test(userData.email) &&
       passwordValidation.test(userData.password)
     ) {
-      console.log('hello', response.assets[0].id);
+      //console.log('hello', response.assets[0].id);
 
       // let url: any = null;
       // if (response) {
@@ -264,7 +264,7 @@ const RegisterScreen = ({ navigation }: any) => {
         userData.password,
       )
         .then(async userCred => {
-          // console.log('userCred:', JSON.stringify(userCred.user.providerData));
+          // //console.log('userCred:', JSON.stringify(userCred.user.providerData));
           // const childName = userData.childData.map(
           //   childData => childData.childName,
           // );
@@ -287,12 +287,12 @@ const RegisterScreen = ({ navigation }: any) => {
 
           //to pass the userData details in database to store it
           const childDataValues = await Promise.all(userData.childData.map(async (res) => {
-            console.log("responseData date : ", res.birthDate)
+            //console.log("responseData date : ", res.birthDate)
             return { ...res, imagePath: await convertUri(res.imagePath || '', res.id.toString()) }
           }))
-          console.log("BeforeConvert data", userData.childData);
+          //console.log("BeforeConvert data", userData.childData);
 
-          console.log('converted childdata : ', childDataValues);
+          //console.log('converted childdata : ', childDataValues);
 
           const userDetails = {
             ...userCred.user.providerData[0],
@@ -306,13 +306,13 @@ const RegisterScreen = ({ navigation }: any) => {
           }
 
           // };
-          console.log("registration details:", userDetails);
+          //console.log("registration details:", userDetails);
 
           const Data = {
             _id: userCred.user.uid, // unique id for the database record
             userData: userDetails, // userData feild that stores all userDetails in it
           };
-          console.log('data: ', Data);
+          //console.log('data: ', Data);
 
           setDoc(doc(db, 'user', userCred.user.uid), Data)
             // setDoc is used to create or update a document in a collection ,
@@ -351,8 +351,8 @@ const RegisterScreen = ({ navigation }: any) => {
 
 
 
-  // console.log("response:" ,response);
-  const {height, width} = useWindowDimensions();
+  // //console.log("response:" ,response);
+  const { height, width } = useWindowDimensions();
   return (
     <View className='px-5 bg-white'>
       <Header
@@ -455,8 +455,8 @@ const RegisterScreen = ({ navigation }: any) => {
           <FlatList
             data={userData.childData}
             renderItem={({ item, index }) => {
-              // console.log("item length : " , index);
-              
+              // //console.log("item length : " , index);
+
               return (
                 <View>
                   <View className='flex-row items-start'>
@@ -500,7 +500,7 @@ const RegisterScreen = ({ navigation }: any) => {
                                 {type === 'capture' ? (
                                   <TouchableOpacity className='flex-row gap-5 items-center'
                                     onPress={() => {
-                                      onChildButtonPress(type, options,item);
+                                      onChildButtonPress(type, options, item);
                                       setModal(false);
                                     }}>
                                     <CameraIcon
@@ -515,9 +515,9 @@ const RegisterScreen = ({ navigation }: any) => {
                                 ) : (
                                   <TouchableOpacity className='flex-row gap-5 items-center'
                                     onPress={() => {
-                                      onChildButtonPress(type, options ,item);
-                                      console.log("Selected item:" , item);
-                                      
+                                      onChildButtonPress(type, options, item);
+                                      //console.log("Selected item:" , item);
+
                                       setModal(false);
                                     }}>
                                     <GalleryIcon
@@ -560,8 +560,8 @@ const RegisterScreen = ({ navigation }: any) => {
                   <View className='flex-row justify-center'>
                     <View className='mr-[18px] w-[45%]'>
                       <Dropdown
-                      placeholderStyle = {{color:"#999999"}}
-                      selectedTextStyle={{color:"#999999"}}
+                        placeholderStyle={{ color: "#999999" }}
+                        selectedTextStyle={{ color: "#999999" }}
                         style={[
                           styles.dropDown,
                           { borderColor: focus ? '#E97DAF' : '#F9F2EE' },
@@ -593,7 +593,8 @@ const RegisterScreen = ({ navigation }: any) => {
                         }
                         onIconPress={() => {
                           setCurrentIndex(index)
-                          setSelectDate(true)}}
+                          setSelectDate(true)
+                        }}
                         value={new Date(item.birthDate).toDateString()}
                       />
                       {selectDate && index === currentIndex && (
@@ -605,7 +606,7 @@ const RegisterScreen = ({ navigation }: any) => {
                               date.nativeEvent.timestamp,
                             ); //to set we need to do like this for updating the date
                             userData.childData[currentIndex].birthDate = birthDate;
-                            console.log("Date : " ,birthDate ,"index of date: " ,index , "setting date: " ,JSON.stringify(userData.childData[index].birthDate) ) 
+                            //console.log("Date : " ,birthDate ,"index of date: " ,index , "setting date: " ,JSON.stringify(userData.childData[index].birthDate) ) 
                             setChildData();
                             // setDate(new Date(date.nativeEvent.timestamp)), //to set we need to do like this for updating the date
                             setSelectDate(false);

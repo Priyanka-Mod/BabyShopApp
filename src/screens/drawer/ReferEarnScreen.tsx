@@ -4,8 +4,28 @@ import { Header } from "../../components";
 import { MenuIcon } from "../../assets/icon";
 import { DrawerActions } from "@react-navigation/native";
 import { Colors } from "../../utils";
+import Share from 'react-native-share';
+
 
 const ReferEarnScreen = ({ navigation }: any) => {
+  const url = "Your refer code";
+  const title = "Your refer code";
+  const message = "BGEFG30";
+
+  const options = {
+    title,
+    url,
+    message,
+  };
+
+  const share = async (customOptions = options) => {
+    try {
+      await Share.open(customOptions);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <View className="flex-1 bg-white dark:bg-zinc-900">
       <Header title="Refer & Earn"
@@ -22,7 +42,7 @@ const ReferEarnScreen = ({ navigation }: any) => {
       <View className="bg-white">
         <Image
           source={require('../../assets/img/logo.png')}
-          resizeMode="contain"
+          resizeMode="cover"
         />
       </View>
       <View className="items-center justify-center">
@@ -38,7 +58,10 @@ const ReferEarnScreen = ({ navigation }: any) => {
       </View>
       <View className="absolute bottom-12 rounded-full border-2 border-lightblue 
                 z-10 left-40">
-        <TouchableOpacity className="h-20 w-20 justify-center items-center">
+        <TouchableOpacity className="h-20 w-20 justify-center items-center"
+          onPress={async () => {
+            await share();
+          }}>
           <Image className="w-10 h-10"
             source={require('../../assets/img/share.png')}
             tintColor={'#0685DB'}

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Header, Input} from '../../components';
+import React, { useEffect, useState } from 'react';
+import { Header, Input } from '../../components';
 import {
   Alert,
   FlatList,
@@ -21,7 +21,7 @@ import {
   GalleryIcon,
   PlusIcon,
 } from '../../assets/icon';
-import {useAuth} from '../../services/useContextService';
+import { useAuth } from '../../services/useContextService';
 import moment from 'moment';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'react-native-image-picker';
@@ -31,9 +31,9 @@ import firestore from '@react-native-firebase/firestore';
 
 
 
-const MyChildDetails = ({navigation}: any) => {
-  const {user , setUser} = useAuth();
-const [childData , setChildData] = useState(user!.userData.childData)
+const MyChildDetails = ({ navigation }: any) => {
+  const { user, setUser } = useAuth();
+  const [childData, setChildData] = useState(user!.userData.childData)
   // let childData = ;
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -51,16 +51,16 @@ const [childData , setChildData] = useState(user!.userData.childData)
   const onEdit = (id: number) => {
     const editChild = childData.find(data => data.id === id);
 
-    console.log('editChild:', editChild);
+    //console.log('editChild:', editChild);
 
-    navigation.navigate("EditChild",editChild)
+    navigation.navigate("EditChild", editChild)
   };
- 
+
   const onDelChild = (id: number) => {
     const filterData = childData.filter(data => data.id !== id)
 
-    console.log("Deleted child" , id , "data" , filterData);
-    let updatedData = {userData:{ ...user!.userData , childData:filterData} };
+    //console.log("Deleted child" , id , "data" , filterData);
+    let updatedData = { userData: { ...user!.userData, childData: filterData } };
 
     firestore().collection('user').doc(user?._id).update(updatedData);
     // setUser(updatedData)
@@ -87,7 +87,7 @@ const [childData , setChildData] = useState(user!.userData.childData)
       </TouchableOpacity>
       <FlatList
         data={childData}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <View
               className="flex-row items-start justify-between mx-5 border-lightgray"
@@ -96,14 +96,14 @@ const [childData , setChildData] = useState(user!.userData.childData)
               }}>
               <View className="flex-row gap-2.5 py-5 items-center ">
                 <View className="rounded-full border-primary border-2 mt-0 pt-0">
-                <Image
-                  className="rounded-full"
-                  source={{
-                    uri:item.imagePath,
-                    height: 80,
-                    width: 80,
-                  }}
-                />
+                  <Image
+                    className="rounded-full"
+                    source={{
+                      uri: item.imagePath,
+                      height: 80,
+                      width: 80,
+                    }}
+                  />
                 </View>
 
                 <View>
@@ -132,7 +132,7 @@ const [childData , setChildData] = useState(user!.userData.childData)
                   <EditIcon height={20} width={20} fill={'#bfbfbf'} />
                 </TouchableOpacity >
                 <TouchableOpacity onPress={() => onDelChild(item.id)}>
-                <DeleteIcon height={20} width={20} fill={'#bfbfbf'} />
+                  <DeleteIcon height={20} width={20} fill={'#bfbfbf'} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 10,
     height: 50,
-    marginBottom:20
+    marginBottom: 20
   },
 })
 

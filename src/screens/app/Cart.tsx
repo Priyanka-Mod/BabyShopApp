@@ -1,77 +1,77 @@
-import React, {useEffect, useState} from 'react';
-import {Alert, FlatList, Image, Text, View} from 'react-native';
-import {ErrorText, Header, PrimaryButton} from '../../components';
-import {Colors} from '../../utils';
-import {BackWhiteArrowIcon, DeleteIcon} from '../../assets/icon';
-import {Dropdown} from 'react-native-element-dropdown';
+import React, { useEffect, useState } from 'react';
+import { Alert, FlatList, Image, Text, View } from 'react-native';
+import { ErrorText, Header, PrimaryButton } from '../../components';
+import { Colors } from '../../utils';
+import { BackWhiteArrowIcon, DeleteIcon } from '../../assets/icon';
+import { Dropdown } from 'react-native-element-dropdown';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ProductDetailsType} from '../../types';
+import { ProductDetailsType } from '../../types';
 import { useAuth } from '../../services/useContextService';
 
-const Cart = ({navigation}: any) => {
+const Cart = ({ navigation }: any) => {
   const [Id, setId] = useState('');
   const [productCartData, setProductData] = useState<ProductDetailsType[]>();
-  const [totalPrice , setTotalPrice] = useState(0)
-  const [discountPrice , setDiscountPrice] = useState(0)
+  const [totalPrice, setTotalPrice] = useState(0)
+  const [discountPrice, setDiscountPrice] = useState(0)
   const { user } = useAuth();
 
   useEffect(() => {
-    
-        // Alert.alert('useEffect Called!')
-        const userDetails = user
-        const userData = userDetails?.userData
-        // const userDataObj = JSON.parse(userData as string);
-        setId(userData?.uid);
-        let docRef = firestore().collection('cartProducts').doc(Id);
 
-        docRef.get().then(res => {
-          if (res.exists) {
-            // console.log('res: ', res.data());
-            let oldData :ProductDetailsType[]  = res?.data()?.productData;
+    // Alert.alert('useEffect Called!')
+    const userDetails = user
+    const userData = userDetails?.userData
+    // const userDataObj = JSON.parse(userData as string);
+    setId(userData?.uid);
+    let docRef = firestore().collection('cartProducts').doc(Id);
 
-            // console.log('old data:', oldData);
-            setProductData(oldData);
-            let total = 0;
-            let discount = 0;
-            oldData.forEach(products => {
-             
-              total = (Number(products.qty) * Number(products.actualPrice)) + total
-              discount =( ((Number(products.actualPrice)) - (Number(products.productPrice)))  * (Number(products.qty))+ discount)
-              
-              
-            })
-            
-            setTotalPrice(total)
-            setDiscountPrice(discount)
-            
-          }
+    docRef.get().then(res => {
+      if (res.exists) {
+        // //console.log('res: ', res.data());
+        let oldData: ProductDetailsType[] = res?.data()?.productData;
+
+        // //console.log('old data:', oldData);
+        setProductData(oldData);
+        let total = 0;
+        let discount = 0;
+        oldData.forEach(products => {
+
+          total = (Number(products.qty) * Number(products.actualPrice)) + total
+          discount = (((Number(products.actualPrice)) - (Number(products.productPrice))) * (Number(products.qty)) + discount)
+
+
         })
+
+        setTotalPrice(total)
+        setDiscountPrice(discount)
+
+      }
+    })
   }, [Id]);
 
   const deleteProduct = (item: ProductDetailsType) => {
-    // console.log('item:', item.id);
+    // //console.log('item:', item.id);
     const deletedData = productCartData?.filter(data => data.id !== item.id);
     firestore()
       .collection('cartProducts')
       .doc(Id)
-      .update({productData: deletedData});
+      .update({ productData: deletedData });
 
     setProductData(deletedData);
     let total = 0;
-    let discount =0 ;
+    let discount = 0;
     deletedData?.forEach(products => {
-    //  console.log(Number(products.actualPrice));
-     
-      total = (Number(products.qty) * Number(products.actualPrice)) + total
-    // console.log("Total:",total);
+      //  //console.log(Number(products.actualPrice));
 
-    discount =( ((Number(products.actualPrice)) - (Number(products.productPrice)))  * (Number(products.qty))+ discount)
-  })
-  // console.log("discount:" , discount);
-  
-  setTotalPrice(total)
-  setDiscountPrice(discount)
+      total = (Number(products.qty) * Number(products.actualPrice)) + total
+      // //console.log("Total:",total);
+
+      discount = (((Number(products.actualPrice)) - (Number(products.productPrice))) * (Number(products.qty)) + discount)
+    })
+    // //console.log("discount:" , discount);
+
+    setTotalPrice(total)
+    setDiscountPrice(discount)
 
   };
 
@@ -80,23 +80,23 @@ const Cart = ({navigation}: any) => {
     if (productCartData) {
       productCartData[index].qty = qty;
 
-      // console.log(productCartData);
+      // //console.log(productCartData);
 
-      let updatedData = {productData: productCartData};
+      let updatedData = { productData: productCartData };
       firestore().collection('cartProducts').doc(Id).update(updatedData);
       let total = 0;
-      let discount=0;
+      let discount = 0;
       productCartData.forEach(products => {
-      //  console.log(Number(products.actualPrice));
-       
+        //  //console.log(Number(products.actualPrice));
+
         total = (Number(products.qty) * Number(products.actualPrice)) + total
-      // console.log("Total:",total);
-      discount =( ((Number(products.actualPrice)) - (Number(products.productPrice)))  * (Number(products.qty))+ discount)
-    })
-    // console.log("discount:" , discount);
-    
-    setTotalPrice(total)
-    setDiscountPrice(discount)
+        // //console.log("Total:",total);
+        discount = (((Number(products.actualPrice)) - (Number(products.productPrice))) * (Number(products.qty)) + discount)
+      })
+      // //console.log("discount:" , discount);
+
+      setTotalPrice(total)
+      setDiscountPrice(discount)
     }
   };
 
@@ -121,8 +121,8 @@ const Cart = ({navigation}: any) => {
             data={productCartData}
             scrollEnabled
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom:210}}
-            renderItem={({item, index}) => {
+            contentContainerStyle={{ paddingBottom: 210 }}
+            renderItem={({ item, index }) => {
               return (
                 <View className="my-5 border-b border-lightergray pb-1.5">
                   <View className="mx-4 flex-row  justify-between gap-x-[20px] pb-2.5 ml-0">
@@ -130,7 +130,7 @@ const Cart = ({navigation}: any) => {
                       <View className="border-lightergray rounded-xl border-2">
                         <Image
                           className="rounded-xl"
-                          style={{resizeMode: 'center'}}
+                          style={{ resizeMode: 'center' }}
                           source={{
                             uri: item.productUrl,
                             width: 80,
@@ -140,20 +140,20 @@ const Cart = ({navigation}: any) => {
                       </View>
                       <Dropdown
                         style={{
-                          borderColor:'#9ED4EE',
+                          borderColor: '#9ED4EE',
                           borderWidth: 2,
                           borderRadius: 5,
                           paddingHorizontal: 5,
-              
+
                         }}
                         placeholder="Qty : 1"
                         data={[
-                          {label: 'Qty : 1', value: '1'},
-                          {label: 'Qty : 2', value: '2'},
-                          {label: 'Qty : 3', value: '3'},
+                          { label: 'Qty : 1', value: '1' },
+                          { label: 'Qty : 2', value: '2' },
+                          { label: 'Qty : 3', value: '3' },
                         ]}
-                        placeholderStyle = {{color:"#999999"}}
-                        selectedTextStyle={{color:"#999999"}}
+                        placeholderStyle={{ color: "#999999" }}
+                        selectedTextStyle={{ color: "#999999" }}
                         value={item.qty}
                         onChange={qtyValue => updateQty(index, qtyValue.value)}
                         labelField={'label'}
@@ -184,7 +184,7 @@ const Cart = ({navigation}: any) => {
                           </Text>
                         </Text>
                         <Text className="text-primary dark:text-pink-500 text-sm font-extrabold pt-2">
-                        Rs. {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
+                          Rs. {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
                           <Text className="text-lightgray text-xs line-through">
                             {' '}
                             Rs. {Number(item.actualPrice).toLocaleString('en-US')}.00
@@ -231,7 +231,7 @@ const Cart = ({navigation}: any) => {
             <View className="pt-5">
               <PrimaryButton
                 text="PROCEED"
-                onPress={() => navigation.navigate('Checkout',{total:totalPrice,discount:discountPrice})}
+                onPress={() => navigation.navigate('Checkout', { total: totalPrice, discount: discountPrice })}
               />
             </View>
           </View>

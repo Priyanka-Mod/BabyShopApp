@@ -1,17 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {Header, Input, PrimaryButton} from '../../components';
-import {ActivityIndicator, Image, View} from 'react-native';
-import {BackWhiteArrowIcon, EditIcon} from '../../assets/icon';
+import React, { useEffect, useState } from 'react';
+import { Header, Input, PrimaryButton } from '../../components';
+import { ActivityIndicator, Image, View } from 'react-native';
+import { BackWhiteArrowIcon, EditIcon } from '../../assets/icon';
 import AsyncStorageService from '../../services/asyncStorageService';
-import {update} from 'firebase/database';
+import { update } from 'firebase/database';
 import firestore from '@react-native-firebase/firestore';
-import {useAuth} from '../../services/useContextService';
+import { useAuth } from '../../services/useContextService';
 
-const MyProfile = ({navigation}: any) => {
+const MyProfile = ({ navigation }: any) => {
   // const [Id , setId] = useState<any>();
   // const [user, setUser] = useState<any>();
-  const {user} = useAuth();
-  const {setUser} = useAuth();
+  const { user } = useAuth();
+  const { setUser } = useAuth();
 
   const [name, setName] = useState<any>();
   const [number, setNumber] = useState<any>();
@@ -22,17 +22,17 @@ const MyProfile = ({navigation}: any) => {
     setNumber(user!.userData.phoneNumber);
   }, []);
   const onSubmit = (name: any, email: any, number: any) => {
-    console.log('details Updated :', name, email, number);
+    //console.log('details Updated :', name, email, number);
     // const oldData = [...user]
     if (user) {
       user.userData.displayName = name;
       user.userData.email = email;
       user.userData.phoneNumber = number;
-      let updatedData = {userData: user.userData};
+      let updatedData = { userData: user.userData };
       firestore().collection('user').doc(user._id).update(updatedData);
-      console.log('updatedDB : ', updatedData);
+      //console.log('updatedDB : ', updatedData);
       setUser(user);
-      console.log('user', user);
+      //console.log('user', user);
 
       navigation.navigate('Account');
     }
@@ -51,7 +51,7 @@ const MyProfile = ({navigation}: any) => {
         onBackPress={() => navigation.navigate('Account')}
 
         rightIcon1={<EditIcon height={20} width={20} fill={'white'} />}
-        // onPressRightIcon={() => }
+      // onPressRightIcon={() => }
       />
       {user ? (
         <View className="mx-5">

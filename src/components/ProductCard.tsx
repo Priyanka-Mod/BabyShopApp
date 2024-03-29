@@ -4,6 +4,7 @@ import {
   Dimensions,
   FlatList,
   Image,
+  Modal,
   Platform,
   StyleSheet,
   Text,
@@ -34,22 +35,24 @@ type ProductCard = {
   productData: any;
   addToCart?: boolean;
   horizontal?: boolean;
+  scrollToTop?: () => void;
 };
 export const ProductCard = ({
   productData,
   addToCart = false,
   horizontal = false,
-}: ProductCard) => {
-  // console.log(addToCart);
+  scrollToTop
+}: ProductCard,) => {
+  // //console.log(addToCart);
   const navigation = useNavigation<NativeStackNavigationProp<StackParamList>>();
   const navigateProductDetail = (item: ProductDetailsType) => {
     navigation.navigate('ProductDetail', { productSelected: item });
   };
   const [data, setData] = useState(productData);
   const [value, setValue] = useState(3);
+  const [modal, setModal] = useState(false);
   const { user } = useAuth();
-  console.log("data:", data);
-
+  //console.log("data:", data);
   const onFavClick = useCallback(
     (index: number) => {
       const newData = [...data];
@@ -59,25 +62,31 @@ export const ProductCard = ({
     [data],
   );
   //   const addToFav = (id:string,productIndex:number) => {
-  //     console.log(id,productIndex);
+  //     //console.log(id,productIndex);
   //     for(let [index,data] of productData.entries()){
-  //       // console.log('value: ' , data , "index:" , index)
+  //       // //console.log('value: ' , data , "index:" , index)
   //       if(productIndex === index){
-  //       console.log('value: ' , data , "index:" , index)
+  //       //console.log('value: ' , data , "index:" , index)
   //         // setIsFav(!isFav)
   //       }
   //     }
 
   // }
+
+  const onScroll = () => {
+    if (scrollToTop)
+      scrollToTop()
+  }
   const onAddToCart = async (item: ProductDetailsType) => {
     const userDetails = user
     const userData = userDetails?.userData
     if (!userData) {
-      Alert.alert('You need to login yourself first!');
+      setModal(true)
+      // Alert.alert('You need to login yourself first!');
       return false;
     }
 
-    console.log('user:', userData);
+    //console.log('user:', userData);
     // const userDataObj = JSON.parse(userData);
 
     let docRef = firestore()
@@ -86,35 +95,40 @@ export const ProductCard = ({
 
     docRef.get().then(res => {
       if (res.exists) {
-        console.log('res: ', res.data());
+        //console.log('res: ', res.data());
         let oldData = res?.data()?.productData;
 
-        console.log('old data:', oldData);
+        //console.log('old data:', oldData);
         const checkOldData = oldData;
         const isExists = checkOldData.find((data: ProductDetailsType) => data.id === item.id);
         if (!isExists) {
           let updatedData = { productData: [...oldData, item] }; // update it on specific object key's value
-          console.log('Updated cart: ', updatedData);
+          //console.log('Updated cart: ', updatedData);
 
           firestore()
             .collection('cartProducts')
             .doc(userData.uid)
             .update(updatedData); //.update will take object or specific key's object value
+
+          Alert.alert("Item added successfully")
+
         } else {
           Alert.alert('This product is already added in cart!');
         }
       } else {
+
         const productDetails = {
           _id: userData.uid,
           productData: [item],
         };
-        console.log('new data created', userData.uid);
-        console.log('Product details : ', productDetails)
+        //console.log('new data created', userData.uid);
+        //console.log('Product details : ', productDetails)
 
         setDoc(
           doc(db, 'cartProducts', userData.uid),
           productDetails,
         );
+
       }
     });
   };
@@ -136,14 +150,14 @@ export const ProductCard = ({
                   <SecondaryButton text={item.discount} paddingHorizontal={8} />
                 </View>
                 <TouchableOpacity
-                  onPress={() => navigateProductDetail(item)}
+                  onPress={() => { navigateProductDetail(item), onScroll() }}
                   className="items-center"
                   style={styles.productImageContainer}>
                   <View className="border-lightergray border bg-white rounded-t-2xl">
                     <Image
                       className="p-0 m-0"
                       style={{
-                        resizeMode: 'contain',
+                        resizeMode: 'cover',
                       }}
                       source={{
                         uri: item.productUrl,
@@ -202,6 +216,27 @@ export const ProductCard = ({
           );
         }}
       />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modal}
+        onRequestClose={() => setModal(false)}>
+        <View className='bg-black opacity-50 flex-1' />
+        <View className='bg-white w-full h-[180px] items-center p-2.5 pt-4 gap-5 ml-0 pl-0'>
+          <Text className='text-xl'>You need to log in yourself first!</Text>
+          <View className='flex-row w-[50%] justify-between'>
+            <TouchableOpacity className='p-2' onPress={() => setModal(false)}>
+              <Text className='text-base text-zinc-700 font-bold'>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className='p-2' onPress={() => {
+              navigation.navigate('AuthStack')
+              setModal(false)
+            }}>
+              <Text className='text-base text-blue font-bold'>LogIn</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

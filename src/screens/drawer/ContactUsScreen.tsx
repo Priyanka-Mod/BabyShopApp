@@ -35,10 +35,10 @@ const ContactUsScreen = ({ navigation }: any) => {
         <View className="border-lightgray border-b">
           <View className="flex-row my-2.5 items-center justify-between mx-5">
             <View className="pr-4">
-              <ContactIcon height={45} width={45} fill={Colors.primary}/>
+              <ContactIcon height={30} width={30} fill={Colors.primary} />
             </View>
             <View className='border-lightgray border h-[28px] mr-4' />
-            <View className='flex-row w-[80%]'> 
+            <View className='flex-row w-[80%]'>
               <Text className="text-[#575757] dark:text-zinc-400 font-extrabold text-[15px] flex-1">
                 +91 12345 67890{' '}
               </Text>
@@ -51,7 +51,7 @@ const ContactUsScreen = ({ navigation }: any) => {
         <View className="border-lightgray border-b">
           <View className="flex-row my-2.5 items-center mx-5">
             <View className="pr-4">
-              <ContactIcon height={45} width={45} fill={Colors.primary} />
+              <ContactIcon height={30} width={30} fill={Colors.primary} />
             </View>
             <View className='border-lightgray border h-[28px] mr-4' />
             <Text className="text-[#575757] dark:text-zinc-400 font-extrabold text-base">
@@ -62,7 +62,7 @@ const ContactUsScreen = ({ navigation }: any) => {
         <View
           className="flex-row my-2.5 items-center mx-5">
           <View className="pr-4">
-            <ContactIcon height={45} width={45} fill={Colors.primary} />
+            <ContactIcon height={30} width={30} fill={Colors.primary} />
           </View>
           <View className='border-lightgray border h-[28px] mr-4' />
           <Text className="text-[#575757] dark:text-zinc-400 font-extrabold text-base">
@@ -111,7 +111,7 @@ const ContactUsScreen = ({ navigation }: any) => {
             height={100}
             value={description}
             onChangeText={newName => setDescription(newName)}
-            
+
           />
           <PrimaryButton text="SUBMIT" />
         </View>

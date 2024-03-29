@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -8,72 +8,72 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Header, PrimaryButton, SecondaryButton} from '../../components';
+import { Header, PrimaryButton, SecondaryButton } from '../../components';
 import {
   BackWhiteArrowIcon,
   ForwardButtonIcon,
   OfferIcon,
 } from '../../assets/icon';
-import {Colors} from '../../utils';
-import {Dropdown} from 'react-native-element-dropdown';
+import { Colors } from '../../utils';
+import { Dropdown } from 'react-native-element-dropdown';
 // import CheckBox from '@react-native-community/checkbox';
-import {ProductDetailsType} from '../../types';
+import { ProductDetailsType } from '../../types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '../../services/useContextService';
 import { CheckBox } from '../../components/CheckBox';
 
-const CheckoutScreen = ({route, navigation}: any) => {
-  const {total, discount} = route.params;
-  console.log(total, discount);
+const CheckoutScreen = ({ route, navigation }: any) => {
+  const { total, discount } = route.params;
+  //console.log(total, discount);
   const [Id, setId] = useState('');
   const [productCartData, setProductData] = useState<ProductDetailsType[]>();
-  const [totalPrice , setTotalPrice] = useState(total)
-  const [discountPrice , setDiscountPrice] = useState(discount)
-  const {user} = useAuth()
+  const [totalPrice, setTotalPrice] = useState(total)
+  const [discountPrice, setDiscountPrice] = useState(discount)
+  const { user } = useAuth()
   useEffect(() => {
-        // Alert.alert('useEffect Called!')
-        const userDetails = user
+    // Alert.alert('useEffect Called!')
+    const userDetails = user
     const userData = userDetails?.userData
-        // const userDataObj = JSON.parse(userData as string);
-        setId(userData.uid);
-        let docRef = firestore().collection('cartProducts').doc(Id);
+    // const userDataObj = JSON.parse(userData as string);
+    setId(userData.uid);
+    let docRef = firestore().collection('cartProducts').doc(Id);
 
-        docRef.get().then(res => {
-          if (res.exists) {
-            // console.log('res: ', res.data());
-            let productData: ProductDetailsType[] = res?.data()?.productData;
-            // console.log('old data:', oldData);
-            setProductData(productData);
-          }
-        });
+    docRef.get().then(res => {
+      if (res.exists) {
+        // //console.log('res: ', res.data());
+        let productData: ProductDetailsType[] = res?.data()?.productData;
+        // //console.log('old data:', oldData);
+        setProductData(productData);
+      }
+    });
   }, [Id]);
   const [check, setCheck] = useState(false);
   // const [paycheck, setPaycheck] = useState({cod: false, online: false});
-  const [cod , setCOD] =useState(false)
-  const [online , setOnline] = useState(false)
+  const [cod, setCOD] = useState(false)
+  const [online, setOnline] = useState(false)
   const updateQty = (index: number, qty: string) => {
     // let updatedProduct = [...productData]
     if (productCartData) {
       productCartData[index].qty = qty;
 
-      // console.log(productCartData);
+      // //console.log(productCartData);
 
-      let updatedData = {productData: productCartData};
+      let updatedData = { productData: productCartData };
       firestore().collection('cartProducts').doc(Id).update(updatedData);
       let total = 0;
-      let discount=0;
+      let discount = 0;
       productCartData.forEach(products => {
-      //  console.log(Number(products.actualPrice));
-       
+        //  //console.log(Number(products.actualPrice));
+
         total = (Number(products.qty) * Number(products.actualPrice)) + total
-      // console.log("Total:",total);
-      discount =( ((Number(products.actualPrice)) - (Number(products.productPrice)))  * (Number(products.qty))+ discount)
-    })
-    // console.log("discount:" , discount);
-    
-    setTotalPrice(total)
-    setDiscountPrice(discount)
+        // //console.log("Total:",total);
+        discount = (((Number(products.actualPrice)) - (Number(products.productPrice))) * (Number(products.qty)) + discount)
+      })
+      // //console.log("discount:" , discount);
+
+      setTotalPrice(total)
+      setDiscountPrice(discount)
     }
   };
 
@@ -89,7 +89,7 @@ const CheckoutScreen = ({route, navigation}: any) => {
         }
         onBackPress={() => navigation.navigate('Cart')}
       />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom:50}}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 50 }}>
         <View className="my-2.5 border-b-2 border-lightergray pb-5">
           <View className="mx-5">
             <View className="flex-row gap-2.5 items-center">
@@ -132,7 +132,7 @@ const CheckoutScreen = ({route, navigation}: any) => {
         </View>
         <FlatList
           data={productCartData}
-          renderItem={({item,index}) => {
+          renderItem={({ item, index }) => {
             return (
               <View className="mb-2.5 border-b border-zinc-200 pb-2.5">
                 <View className="mx-4">
@@ -160,7 +160,7 @@ const CheckoutScreen = ({route, navigation}: any) => {
                         </Text>
                       </Text>
                       <Text className="text-primary dark:text-pink-500 text-sm font-extrabold py-1">
-                      
+
                         Rs. {Number(item.productPrice).toLocaleString('en-US')}.00{' '}
                         <Text className="text-lightgray text-xs line-through">
                           {' '}
@@ -180,8 +180,8 @@ const CheckoutScreen = ({route, navigation}: any) => {
                         />
                       </View>
                       <Dropdown
-                      placeholderStyle = {{color:"#999999"}}
-                      selectedTextStyle={{color:"#999999"}}
+                        placeholderStyle={{ color: "#999999" }}
+                        selectedTextStyle={{ color: "#999999" }}
                         style={{
                           borderColor: '#9ED4EE',
                           borderWidth: 2,
@@ -190,12 +190,12 @@ const CheckoutScreen = ({route, navigation}: any) => {
                         }}
                         placeholder={item.qty}
                         data={[
-                          {label: 'Qty:1', value: '1'},
-                          {label: 'Qty:2', value: '2'},
-                          {label: 'Qty:3', value: '3'},
+                          { label: 'Qty:1', value: '1' },
+                          { label: 'Qty:2', value: '2' },
+                          { label: 'Qty:3', value: '3' },
                         ]}
                         value={item.qty}
-                        onChange={qtyValue => updateQty(index, qtyValue.value) }
+                        onChange={qtyValue => updateQty(index, qtyValue.value)}
                         labelField={'label'}
                         valueField={'value'}
                       />
@@ -232,13 +232,13 @@ const CheckoutScreen = ({route, navigation}: any) => {
             <View className="flex-row items-center gap-x-7">
               <TouchableOpacity
                 className="flex-row items-center gap-x-1.5"
-                onPress={() =>setCOD(!cod)}
+                onPress={() => setCOD(!cod)}
               >
                 <CheckBox
                   check={cod}
-                onValueChange={() => setCOD(!cod)}
-                label='Cash On Delivery'
-                customLabelStyle="text-black  dark:text-white text-sm font-semibold"
+                  onValueChange={() => setCOD(!cod)}
+                  label='Cash On Delivery'
+                  customLabelStyle="text-black  dark:text-white text-sm font-semibold"
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -251,7 +251,7 @@ const CheckoutScreen = ({route, navigation}: any) => {
                   onValueChange={() => setOnline(!online)
                   }
                   label='Online Payment'
-                  customLabelStyle = "text-black  dark:text-white text-sm font-semibold"
+                  customLabelStyle="text-black  dark:text-white text-sm font-semibold"
                 />
               </TouchableOpacity>
             </View>

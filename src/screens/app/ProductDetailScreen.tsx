@@ -1,32 +1,35 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Alert,
   FlatList,
   Image,
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Header, PrimaryButton, ProductCard, Star} from '../../components';
+import Share from 'react-native-share';
+import { Header, PrimaryButton, ProductCard, Star } from '../../components';
 import {
   BackWhiteArrowIcon,
   CartIcon,
   ForwardButtonIcon,
 } from '../../assets/icon';
 import Swiper from 'react-native-swiper';
-import {Colors} from '../../utils';
-import {db} from '../../services/firebaseConfig';
+import { Colors } from '../../utils';
+import { db } from '../../services/firebaseConfig';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {doc, getDoc, setDoc} from 'firebase/firestore';
-import {ProductDetailsType} from '../../types';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { ProductDetailsType } from '../../types';
 import { useAuth } from '../../services/useContextService';
+import { useScrollToTop } from '@react-navigation/native';
 
-const ProductDetailScreen = ({route, navigation}: any) => {
+const ProductDetailScreen = ({ route, navigation }: any) => {
   const productData = route.params;
-  const suggestedProducts =[
+  const suggestedProducts = [
     {
       id: '1',
       productUrl:
@@ -35,9 +38,9 @@ const ProductDetailScreen = ({route, navigation}: any) => {
       productPrice: '4139',
       actualPrice: '4599',
       discount: '-10%',
-      size:'500ml',
-      brand:'Mamaearth',
-      qty:1
+      size: '500ml',
+      brand: 'Mamaearth',
+      qty: 1
     },
     {
       id: '2',
@@ -46,9 +49,9 @@ const ProductDetailScreen = ({route, navigation}: any) => {
       productPrice: '379',
       actualPrice: '459',
       discount: '-5%',
-      size:'200ml',
-      brand:'Mamaearth',
-      qty:1
+      size: '200ml',
+      brand: 'Mamaearth',
+      qty: 1
 
     },
     {
@@ -59,9 +62,9 @@ const ProductDetailScreen = ({route, navigation}: any) => {
       productPrice: '4139',
       actualPrice: '4599',
       discount: '-10%',
-      size:'500ml',
-      brand:'Chicco',
-      qty:1
+      size: '500ml',
+      brand: 'Chicco',
+      qty: 1
 
     },
     {
@@ -72,65 +75,66 @@ const ProductDetailScreen = ({route, navigation}: any) => {
       productPrice: '499',
       actualPrice: '599',
       discount: '-5%',
-      size:'500ml',
-      brand:'Chicco',
-      qty:1
+      size: '500ml',
+      brand: 'Chicco',
+      qty: 1
 
     },
     {
-        id: '5',
-        productUrl:
-          'https://images.mamaearth.in/catalog/product/d/n/dnbw-1_hfoavdvwmgs9qmxd_white_bg.jpg?fit=contain&height=600',
-        productName: 'Deeply Nourishing Body Wash',
-        productPrice: '4139',
-        actualPrice: '4599',
-        discount: '-10%',
-        brand:'Mamaearth',
-        size:'500ml',
-      qty:1
+      id: '5',
+      productUrl:
+        'https://images.mamaearth.in/catalog/product/d/n/dnbw-1_hfoavdvwmgs9qmxd_white_bg.jpg?fit=contain&height=600',
+      productName: 'Deeply Nourishing Body Wash',
+      productPrice: '4139',
+      actualPrice: '4599',
+      discount: '-10%',
+      brand: 'Mamaearth',
+      size: '500ml',
+      qty: 1
 
-      },
-      {
-        id: '6',
-        productUrl: 'https://m.media-amazon.com/images/I/51bbFLQbsBL.jpg',
-        productName: 'All We Know Baby Bubble Bath ',
-        productPrice: '379',
-        actualPrice: '459',
-        discount: '-5%',
-        brand:'Mamaearth',
-        size:'200ml',
-        qty:1
+    },
+    {
+      id: '6',
+      productUrl: 'https://m.media-amazon.com/images/I/51bbFLQbsBL.jpg',
+      productName: 'All We Know Baby Bubble Bath ',
+      productPrice: '379',
+      actualPrice: '459',
+      discount: '-5%',
+      brand: 'Mamaearth',
+      size: '200ml',
+      qty: 1
 
-      },
-      {
-        id: '7',
-        productUrl:
-          'https://www.chicco.in/dw/image/v2/BGMM_PRD/on/demandware.static/-/Sites-chicco-master/default/dwe073c429/combo/grpcd042.png?sw=800&sh=800&sm=fit',
-        productName: 'Deeply Nourishing Chicco Body Wash',
-        productPrice: '4139',
-        actualPrice: '4599',
-        discount: '-10%',
-        brand:'Chicco',
-        size:'500ml',
-      qty:1
+    },
+    {
+      id: '7',
+      productUrl:
+        'https://www.chicco.in/dw/image/v2/BGMM_PRD/on/demandware.static/-/Sites-chicco-master/default/dwe073c429/combo/grpcd042.png?sw=800&sh=800&sm=fit',
+      productName: 'Deeply Nourishing Chicco Body Wash',
+      productPrice: '4139',
+      actualPrice: '4599',
+      discount: '-10%',
+      brand: 'Chicco',
+      size: '500ml',
+      qty: 1
 
-      },
-      {
-        id: '8',
-        productUrl:
-          'https://www.jiomart.com/images/product/original/491334908/chicco-baby-moments-no-tears-shampoo-500-ml-product-images-o491334908-p590106051-0-202203150239.jpg?im=Resize=(1000,1000)',
-        productName: 'Chicco Baby Moments no-tears Shampoo',
-        productPrice: '499',
-        actualPrice: '599',
-        discount: '-5%',
-        brand:'Chicco',
-        size:'500ml',
-      qty:1
+    },
+    {
+      id: '8',
+      productUrl:
+        'https://www.jiomart.com/images/product/original/491334908/chicco-baby-moments-no-tears-shampoo-500-ml-product-images-o491334908-p590106051-0-202203150239.jpg?im=Resize=(1000,1000)',
+      productName: 'Chicco Baby Moments no-tears Shampoo',
+      productPrice: '499',
+      actualPrice: '599',
+      discount: '-5%',
+      brand: 'Chicco',
+      size: '500ml',
+      qty: 1
 
-      },
+    },
   ];
-  console.log('selectedProduct : ', productData);
-  const {user} = useAuth()
+  //console.log('selectedProduct : ', productData);
+  const { user } = useAuth()
+  const [modal, setModal] = useState(false)
   const onReviewNav = () => {
     navigation.navigate('Review');
   };
@@ -147,11 +151,12 @@ const ProductDetailScreen = ({route, navigation}: any) => {
     const userDetails = user
     const userData = userDetails?.userData
     if (!userData) {
-      Alert.alert('You need to login yourself first!');
+      setModal(true)
+      // Alert.alert('You need to login yourself first!');
       return false;
     }
 
-    console.log('user:', userData);
+    //console.log('user:', userData);
     // const userDataObj = JSON.parse(userData);
 
     let docRef = firestore()
@@ -160,17 +165,17 @@ const ProductDetailScreen = ({route, navigation}: any) => {
 
     docRef.get().then(res => {
       if (res.exists) {
-        console.log('res: ', res.data());
+        //console.log('res: ', res.data());
         let oldData = res?.data()?.productData;
 
-        console.log('old data:', oldData);
+        //console.log('old data:', oldData);
         const checkOldData = oldData;
         const isExists = checkOldData.find(
           (data: ProductDetailsType) => data.id === item.id,
         );
         if (!isExists) {
-          let updatedData = {productData: [...oldData, item]}; // update it on specific object key's value
-          console.log('Updated cart: ', updatedData);
+          let updatedData = { productData: [...oldData, item] }; // update it on specific object key's value
+          //console.log('Updated cart: ', updatedData);
 
           firestore()
             .collection('cartProducts')
@@ -184,7 +189,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           _id: userData.uid,
           productData: [item],
         };
-        console.log('new data created');
+        //console.log('new data created');
 
         setDoc(
           doc(db, 'cartProducts', userData.uid),
@@ -193,21 +198,45 @@ const ProductDetailScreen = ({route, navigation}: any) => {
       }
     });
   };
+  const scroll = React.useRef(null);
+  const imageUrl = "https://images.mamaearth.in/catalog/product/b/o/body-wash_probs_ui8gwmtjnj2sahbz.jpg?fit=contain&height=600";
+  const title = "Product Detail";
+  const message = productData.productSelected.productName;
+  const options = {
+    title,
+    imageUrl,
+    message,
+  };
   return (
     <View className="flex-1 bg-white dark:bg-zinc-900">
       <Header
         title="Product Details"
         iconLeft={
-          <BackWhiteArrowIcon height={25} width={25}  />
+          <BackWhiteArrowIcon height={25} width={25} />
         }
         onBackPress={onBackPress}
-        rightIcon1={<CartIcon height={20} width={20}/>}
-        onPressRightIcon={onCartPress}
+        rightIcon1={<CartIcon height={20} width={20} />}
+        onPressRightIcon2={onCartPress}
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView ref={scroll}
+        showsVerticalScrollIndicator={false}>
         <View className="absolute top-2.5 right-2.5 rounded-full border-2 border-[#AAD5E8] z-10">
-          <TouchableOpacity className="h-7 w-7 justify-center items-center">
+          <TouchableOpacity className="h-7 w-7 justify-center items-center"
+            onPress={async () => {
+              console.log("options: ", options)
+              await Share.open({
+                title: options.title,
+                message: options.message,
+                url: options.imageUrl
+              }).then((res) => {
+                console.log("resShare", res)
+
+              }).catch((err) => console.log(err)
+              )
+            }}
+
+          >
             <Image
               className="h-4 w-4"
               source={require('../../assets/img/share.png')}
@@ -304,7 +333,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
               <TouchableOpacity className="h-6 w-6 bg-[#2CB300] rounded-lg border-[#2CB300]"></TouchableOpacity>
             </View>
             <View className="my-2.5 pb-2.5">
-              <PrimaryButton text="ADD TO CART" onPress={() => addToCart(productData.productSelected)}/>
+              <PrimaryButton text="ADD TO CART" onPress={() => addToCart(productData.productSelected)} />
             </View>
           </View>
         </View>
@@ -360,16 +389,16 @@ const ProductDetailScreen = ({route, navigation}: any) => {
           <View className="mx-5">
             <View className="flex-row items-center justify-between">
               <Text className="text-black dark:text-white text-xl font-semibold">Reviews</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={onReviewNav}
-                >
-              <ForwardButtonIcon
-                height={18}
-                width={18}
-                fill={'#BFBFBF'}
-              />
+              >
+                <ForwardButtonIcon
+                  height={18}
+                  width={18}
+                  fill={'#BFBFBF'}
+                />
               </TouchableOpacity>
-              
+
             </View>
 
             <View className="my-2.5 flex-row gap-x-2.5">
@@ -443,7 +472,7 @@ const ProductDetailScreen = ({route, navigation}: any) => {
                 A. Yes ,this is very safe.
               </Text>
             </View>
-            <View style={{paddingBottom: 10}}>
+            <View style={{ paddingBottom: 10 }}>
               <Text className="font-semibold text-[#b7b7b7]">
                 2) This body nourishing is safe for 4 month old baby?
               </Text>
@@ -459,12 +488,34 @@ const ProductDetailScreen = ({route, navigation}: any) => {
             <Text className="text-#ea59a0 dark:text-white text-lg font-semibold">
               Similar Products
             </Text>
-            <View className="my-2.5 flex-row gap-x-2.5">
-              <ProductCard productData={suggestedProducts} horizontal />
+            <View className="my-2.5 flex-row gap-x-2.5" >
+              <ProductCard scrollToTop={() => scroll.current.scrollTo({ y: 0 })} productData={suggestedProducts} horizontal />
             </View>
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modal}
+        onRequestClose={() => setModal(false)}>
+        <View className='bg-black opacity-50 flex-1' />
+        <View className='bg-white w-full h-[180px] items-center p-2.5 pt-4 gap-5 ml-0 pl-0'>
+          <Text className='text-xl'>You need to log in yourself first!</Text>
+          <View className='flex-row w-[50%] justify-between'>
+            <TouchableOpacity className='p-2' onPress={() => setModal(false)}>
+              <Text className='text-base text-zinc-700 font-bold'>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className='p-2' onPress={() => {
+              navigation.navigate('AuthStack')
+              setModal(false)
+            }}>
+              <Text className='text-base text-blue font-bold'>LogIn</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

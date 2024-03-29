@@ -21,7 +21,7 @@ const App = () => {
   const deviceToken = async () => {
     await messaging().registerDeviceForRemoteMessages();
     const token = await messaging().getToken();
-    // console.log('tokenDevice:', token);
+    // //console.log('tokenDevice:', token);
     await AsyncStorage.setItem('deviceToken', token);
   };
   useEffect(() => {
@@ -29,7 +29,7 @@ const App = () => {
   }, [])
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      // console.log("Remote Message : ", remoteMessage);
+      // //console.log("Remote Message : ", remoteMessage);
 
       onDisplayNotification(remoteMessage)
       //   // backgroundNofication(remoteMessage)
@@ -52,7 +52,7 @@ const App = () => {
 
 
   const onDisplayNotification = async (message: any) => {
-    // console.log("message : ", message);
+    // //console.log("message : ", message);
 
     // Request permissions (required for iOS)
     await notifee.requestPermission()

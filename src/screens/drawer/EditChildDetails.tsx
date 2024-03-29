@@ -58,50 +58,50 @@ const EditChildDetails = ({ navigation, route }: any) => {
     const [uri, setUri] = useState<any>();
 
     const childDetails = route.params;
-    console.log("childData Params : ", childData)
+    //console.log("childData Params : ", childData)
     // setName(childData.childName)
 
     useEffect(() => {
         if (route.params) {
-            console.log('we are');
-            
+            //console.log('we are');
+
             setChildData(childDetails)
-            console.log("context data : " , user!.userData.childData);
-            
-            // console.log("birthdate", childData.birthDate);
-            // console.log("sec birthdate", childData.birthDate.seconds);
+            //console.log("context data : " , user!.userData.childData);
+
+            // //console.log("birthdate", childData.birthDate);
+            // //console.log("sec birthdate", childData.birthDate.seconds);
         }
     }, [])
 
     useEffect(() => {
-        if(childData.birthDate.seconds){
+        if (childData.birthDate.seconds) {
             setConfigureDate(
                 moment.unix(childData.birthDate.seconds).format('ddd MMM DD yyyy'),
             )
-        }else{
+        } else {
             setConfigureDate(moment(new Date()).format('ddd MMM DD yyyy'))
         }
-      
+
     }, [childData])
     const [response, setResponse] = React.useState<any>(null);
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     const convertUri = async (uri: string, id: string) => {
-        console.log('convertURI :', uri, '  ', typeof(id));
+        //console.log('convertURI :', uri, '  ', typeof(id));
         let url = '';
         const reference = storage().ref(id); // Create a storage reference from our storage service by taking our image id to it
-        console.log("ref url : " , reference , typeof reference)
+        //console.log("ref url : " , reference , typeof reference)
         await reference.putFile(uri.replace('file://', ''));
         //putFile() method automatically infers the MIME type from the File extension upload it in storage
         await reference
-          .getDownloadURL()
-          .then(res => {
-            console.log('resOfConverted URL: ', res);
-            url = res;
-          })
-          .catch(err => console.log('error in function: ', err)); // to download url from storage for using it further in code
+            .getDownloadURL()
+            .then(res => {
+                //console.log('resOfConverted URL: ', res);
+                url = res;
+            })
+            .catch(err => console.log('error in function: ', err)); // to download url from storage for using it further in code
         return url;
-      };
+    };
 
     const genderData = [
         { label: 'Male', value: 'male' },
@@ -112,56 +112,56 @@ const EditChildDetails = ({ navigation, route }: any) => {
         if (type === 'capture') {
             const result = await ImagePicker.launchCamera(options, setResponse);
             setUri(result.assets ? result.assets[0].uri : null); //if user close the screen without selecting any image handle that case
-            setChildData(prev => ({...prev ,imagePath:uri}))
+            setChildData(prev => ({ ...prev, imagePath: uri }))
         } else {
             const result = await ImagePicker.launchImageLibrary(options, setResponse);
             setUri(result.assets ? result.assets[0].uri : null);
-            console.log("uri:",uri)
-            let temp =result.assets ? result.assets[0].uri : ''
-            setChildData(prev => ({...prev ,imagePath:temp}))
+            //console.log("uri:",uri)
+            let temp = result.assets ? result.assets[0].uri : ''
+            setChildData(prev => ({ ...prev, imagePath: temp }))
         }
     }, []);
 
-    const onSubmit =async (data:any) => {
-        console.log("Submitted data : ",data);
-        console.log("Send date in utc : " , moment.utc(childData.birthDate.seconds).toDate());
-        const userChildDetails = user!.userData.childData 
-        console.log("userDetails : ",userChildDetails);
+    const onSubmit = async (data: any) => {
+        //console.log("Submitted data : ",data);
+        //console.log("Send date in utc : " , moment.utc(childData.birthDate.seconds).toDate());
+        const userChildDetails = user!.userData.childData
+        //console.log("userDetails : ",userChildDetails);
         const index = userChildDetails.findIndex(res => res.id === data.id)
-        console.log(index,childData.imagePath)
-        if(user!.userData.childData[index]){
-            if(user!.userData.childData[index].imagePath !== childData.imagePath){
-        user!.userData.childData[index].imagePath = await convertUri(childData.imagePath , data.id.toString())
-            }else{
+        //console.log(index,childData.imagePath)
+        if (user!.userData.childData[index]) {
+            if (user!.userData.childData[index].imagePath !== childData.imagePath) {
+                user!.userData.childData[index].imagePath = await convertUri(childData.imagePath, data.id.toString())
+            } else {
                 user!.userData.childData[index].imagePath = childData.imagePath
             }
-        
-        user!.userData.childData[index].childName = childData.childName
-        user!.userData.childData[index].genderValue = childData.genderValue
-        user!.userData.childData[index].birthDate = childData.birthDate
-        console.log("Updated data values : ",user!.userData.childData)
 
-        // const updatedData = {childData: user!.userData.childData}
-    }else{
-        
-        // push whole new object in childData array
-        let convertedUrl = await convertUri(childData.imagePath , childData.id.toString());
-        
-        if(convertedUrl){
-            childData.imagePath = convertedUrl
-            user!.userData.childData = [...user!.userData.childData , childData]
-            console.log("addedimage : " , user!.userData.childData.imagePath )
+            user!.userData.childData[index].childName = childData.childName
+            user!.userData.childData[index].genderValue = childData.genderValue
+            user!.userData.childData[index].birthDate = childData.birthDate
+            //console.log("Updated data values : ",user!.userData.childData)
 
+            // const updatedData = {childData: user!.userData.childData}
+        } else {
+
+            // push whole new object in childData array
+            let convertedUrl = await convertUri(childData.imagePath, childData.id.toString());
+
+            if (convertedUrl) {
+                childData.imagePath = convertedUrl
+                user!.userData.childData = [...user!.userData.childData, childData]
+                //console.log("addedimage : " , user!.userData.childData.imagePath )
+
+            }
         }
-    }
-      let updatedData = {userData:{ ...user!.userData , childData:user!.userData.childData} };
+        let updatedData = { userData: { ...user!.userData, childData: user!.userData.childData } };
 
 
-          firestore().collection('user').doc(user?._id).update(updatedData);
+        firestore().collection('user').doc(user?._id).update(updatedData);
 
-          navigation.navigate("ChildDetails")
+        navigation.navigate("ChildDetails")
 
-        
+
     }
     return (
         <View className="flex-1 bg-white dark:bg-zinc-900">
@@ -246,8 +246,8 @@ const EditChildDetails = ({ navigation, route }: any) => {
                         styles.dropDown,
                         { borderColor: focus ? '#E97DAF' : '#F9F2EE' },
                     ]}
-                    placeholderStyle = {{color:"#999999"}}
-                        selectedTextStyle={{color:"#999999"}}
+                    placeholderStyle={{ color: "#999999" }}
+                    selectedTextStyle={{ color: "#999999" }}
                     // placeholderStyle={{ color: focus ? 'black' : '#BDBDBD' }}
                     // selectedTextStyle={{ color: focus ? 'black' : '#BDBDBD' }}
                     data={genderData}
@@ -283,7 +283,7 @@ const EditChildDetails = ({ navigation, route }: any) => {
                         }
                         mode="date"
                         onChange={date => {
-                            console.log("dateChange", date.nativeEvent.timestamp);
+                            //console.log("dateChange", date.nativeEvent.timestamp);
 
                             setChildData(prev => ({
                                 ...prev, birthDate: {
@@ -291,7 +291,7 @@ const EditChildDetails = ({ navigation, route }: any) => {
                                     seconds: date.nativeEvent.timestamp,
                                 }
                             }));
-                            console.log("chenged date : ", childData.birthDate);
+                            //console.log("chenged date : ", childData.birthDate);
 
                             setConfigureDate(
                                 moment(new Date(childData.birthDate.seconds)).format(

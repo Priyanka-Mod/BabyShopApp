@@ -1,4 +1,4 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import HomeScreen from '../screens/drawer/HomeScreen';
 import MyAccountScreen from '../screens/drawer/MyAccountScreen';
@@ -9,7 +9,6 @@ import WalletScreen from '../screens/drawer/WalletScreen';
 import AboutUsScreen from '../screens/drawer/AboutScreen';
 import ShippingScreen from '../screens/drawer/ShippingScreen';
 import PrivacyScreen from '../screens/drawer/PrivacyScreen';
-import HelpScreen from '../screens/drawer/HelpScreen';
 import ContactUsScreen from '../screens/drawer/ContactUsScreen';
 import CustomDrawer from '../screens/drawer/CustomDrawer';
 import {
@@ -26,8 +25,8 @@ import {
   TruckIcon,
   WalletIcon,
 } from '../assets/icon';
-import {Colors} from '../utils';
-import {View} from 'react-native';
+import { Colors } from '../utils';
+import { View } from 'react-native';
 import MyOrderScreen from '../screens/drawer/MyOrderScreen';
 import MyAddress from '../screens/drawer/MyAddress';
 import MyProfile from '../screens/drawer/MyProfile';
@@ -45,7 +44,7 @@ const DrawerNavigation = () => {
     <Drawer.Navigator
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
-        drawerStyle: {width: '85%'},
+        drawerStyle: { width: '85%' },
         headerShown: false,
       }}>
       <Drawer.Screen
@@ -92,7 +91,7 @@ const DrawerNavigation = () => {
         name="Contact Us"
         component={ContactUsScreen}
       />
-      
+
 
     </Drawer.Navigator>
   );

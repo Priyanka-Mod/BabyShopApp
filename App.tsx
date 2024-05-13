@@ -92,11 +92,8 @@ const App = () => {
           }}
             initialRouteName='Auth'>
             <Stack.Screen name="Auth" component={Auth} />
-            {/* <Stack.Screen name='DrawerStack' component={DrawerNavigation}/> */}
             <Stack.Screen name='AuthStack' component={AuthNavigation} />
-
             <Stack.Screen name='AppStack' component={AppNavigation} />
-
           </Stack.Navigator>
         </NavigationContainer>
       </MenuProvider>
